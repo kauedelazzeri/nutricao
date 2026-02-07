@@ -19,6 +19,7 @@ export default [
   route("app/patient/register-meal", "modules/patient/pages/RegisterMealPage.tsx"),
   route("app/patient/edit-meal/:id", "modules/patient/pages/EditMealPage.tsx"),
   route("app/patient/timeline", "modules/patient/pages/PatientTimelinePage.tsx"),
+  route("app/patient/health-profile", "modules/patient/pages/PatientHealthProfilePage.tsx"),
 
   // DEMO - Protótipo navegável com dados mockados
   layout("modules/patient/layouts/PatientLayout.tsx", [

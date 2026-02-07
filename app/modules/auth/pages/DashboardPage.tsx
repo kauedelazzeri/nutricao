@@ -121,6 +121,22 @@ export default function DashboardPage() {
             >
               📅 Ver Timeline
             </button>
+
+            <button
+              onClick={() => navigate('/app/patient/health-profile')}
+              style={{
+                padding: '1rem',
+                backgroundColor: '#ff9800',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: '500'
+              }}
+            >
+              🏃 Perfil de Saúde
+            </button>
           </div>
         )}
 
