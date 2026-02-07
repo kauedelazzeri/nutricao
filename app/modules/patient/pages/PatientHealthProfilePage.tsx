@@ -70,11 +70,30 @@ export default function PatientHealthProfilePage() {
     return (
       <div style={{
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh'
+        minHeight: '400px',
+        gap: '1rem'
       }}>
-        <p>Carregando...</p>
+        <div style={{
+          fontSize: '3rem'
+        }}>👤</div>
+        <div style={{
+          width: '48px',
+          height: '48px',
+          border: '4px solid #d1fae5',
+          borderTop: '4px solid #10b981',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }} />
+        <p style={{ color: '#6b7280', fontSize: '0.95rem' }}>Carregando perfil...</p>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }
@@ -85,36 +104,34 @@ export default function PatientHealthProfilePage() {
     <div style={{
       maxWidth: '700px',
       margin: '0 auto',
-      padding: '2rem 1rem'
+      padding: 'clamp(1rem, 3vw, 1.5rem)',
+      paddingBottom: '6rem',
+      background: 'linear-gradient(to bottom, #f0fdf4 0%, #ffffff 300px)'
     }}>
-      <button
-        onClick={() => navigate('/dashboard')}
-        style={{
-          marginBottom: '1.5rem',
-          padding: '0.5rem 1rem',
-          backgroundColor: 'transparent',
-          border: '1px solid #ddd',
-          borderRadius: '6px',
-          cursor: 'pointer',
-          fontSize: '0.95rem'
-        }}
-      >
-        ← Voltar
-      </button>
-
-      <h1 style={{
-        fontSize: '2rem',
-        marginBottom: '0.5rem',
-        color: '#333'
-      }}>
-        Perfil de Saúde
-      </h1>
-      <p style={{
-        color: '#666',
+      <div style={{
         marginBottom: '2rem'
       }}>
-        Mantenha suas informações atualizadas para avaliações mais precisas
-      </p>
+        <h1 style={{
+          margin: 0,
+          fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+          fontWeight: '700',
+          color: '#1f2937',
+          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          marginBottom: '0.25rem'
+        }}>
+          Perfil de Saúde
+        </h1>
+        <p style={{
+          margin: 0,
+          color: '#6b7280',
+          fontSize: '0.95rem'
+        }}>
+          Mantenha suas informações atualizadas para avaliações mais precisas
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit} style={{
         display: 'flex',
@@ -369,40 +386,24 @@ export default function PatientHealthProfilePage() {
 
         {/* Buttons */}
         <div style={{
-          display: 'flex',
-          gap: '1rem',
-          marginTop: '1rem'
+          marginTop: '2rem',
+          paddingBottom: '1rem'
         }}>
-          <button
-            type="button"
-            onClick={() => navigate('/dashboard')}
-            style={{
-              flex: 1,
-              padding: '1rem',
-              backgroundColor: '#f5f5f5',
-              color: '#333',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              fontSize: '1rem',
-              fontWeight: '500',
-              cursor: 'pointer'
-            }}
-          >
-            Cancelar
-          </button>
           <button
             type="submit"
             disabled={saveProfile.isPending}
             style={{
-              flex: 1,
+              width: '100%',
               padding: '1rem',
-              backgroundColor: saveProfile.isPending ? '#ccc' : '#4caf50',
+              background: saveProfile.isPending ? '#d1d5db' : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
               color: 'white',
               border: 'none',
-              borderRadius: '8px',
+              borderRadius: '10px',
               fontSize: '1rem',
-              fontWeight: '500',
-              cursor: saveProfile.isPending ? 'not-allowed' : 'pointer'
+              fontWeight: '600',
+              cursor: saveProfile.isPending ? 'not-allowed' : 'pointer',
+              boxShadow: saveProfile.isPending ? 'none' : '0 4px 14px rgba(16, 185, 129, 0.3)',
+              transition: 'all 0.2s ease'
             }}
           >
             {saveProfile.isPending ? 'Salvando...' : 'Salvar Perfil'}

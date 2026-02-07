@@ -16,11 +16,30 @@ export default function MyEvaluationsPage() {
     return (
       <div style={{
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh'
+        minHeight: '400px',
+        gap: '1rem'
       }}>
-        <p>Carregando avaliações...</p>
+        <div style={{
+          fontSize: '3rem'
+        }}>📊</div>
+        <div style={{
+          width: '48px',
+          height: '48px',
+          border: '4px solid #d1fae5',
+          borderTop: '4px solid #10b981',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }} />
+        <p style={{ color: '#6b7280', fontSize: '0.95rem' }}>Carregando avaliações...</p>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }
@@ -33,18 +52,25 @@ export default function MyEvaluationsPage() {
         padding: '2rem',
         textAlign: 'center'
       }}>
-        <p style={{ color: '#f44336', marginBottom: '1rem' }}>
-          Erro ao carregar avaliações
+        <div style={{
+          fontSize: '4rem',
+          marginBottom: '1rem'
+        }}>😕</div>
+        <h2 style={{ color: '#1f2937', marginBottom: '0.5rem' }}>Ops! Algo deu errado</h2>
+        <p style={{ color: '#6b7280', marginBottom: '1.5rem' }}>
+          Não foi possível carregar suas avaliações
         </p>
         <button
           onClick={() => window.location.reload()}
           style={{
             padding: '0.75rem 1.5rem',
-            backgroundColor: '#4caf50',
+            backgroundColor: '#10b981',
             color: 'white',
             border: 'none',
             borderRadius: '8px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            fontSize: '1rem',
+            fontWeight: '600'
           }}
         >
           Tentar novamente
@@ -61,22 +87,39 @@ export default function MyEvaluationsPage() {
         padding: '2rem',
         textAlign: 'center'
       }}>
-        <h2 style={{ marginBottom: '0.5rem' }}>Nenhuma avaliação</h2>
-        <p style={{ color: '#666', marginBottom: '1.5rem' }}>
-          Você ainda não solicitou nenhuma avaliação
+        <div style={{
+          fontSize: '5rem',
+          marginBottom: '1.5rem'
+        }}>📊</div>
+        <h2 style={{ 
+          fontSize: '1.5rem',
+          fontWeight: '700',
+          color: '#1f2937',
+          marginBottom: '0.75rem'
+        }}>Solicite sua primeira avaliação!</h2>
+        <p style={{
+          color: '#6b7280',
+          fontSize: '1.05rem',
+          marginBottom: '2rem',
+          lineHeight: '1.6'
+        }}>
+          Conecte-se com nutricionistas profissionais e receba orientações personalizadas
         </p>
         <button
           onClick={() => navigate('/app/patient/nutritionists')}
           style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: '#4caf50',
+            padding: '1rem 2rem',
+            backgroundColor: '#10b981',
             color: 'white',
             border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer'
+            borderRadius: '10px',
+            fontSize: '1.05rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)'
           }}
         >
-          Solicitar Avaliação
+          👩‍⚕️ Encontrar Nutricionista
         </button>
       </div>
     );
@@ -86,23 +129,10 @@ export default function MyEvaluationsPage() {
     <div style={{
       maxWidth: '800px',
       margin: '0 auto',
-      padding: '2rem 1rem'
+      padding: 'clamp(1rem, 3vw, 1.5rem)',
+      paddingBottom: '6rem',
+      background: 'linear-gradient(to bottom, #f0fdf4 0%, #ffffff 300px)'
     }}>
-      <button
-        onClick={() => navigate('/app/patient/timeline')}
-        style={{
-          marginBottom: '1.5rem',
-          padding: '0.5rem 1rem',
-          backgroundColor: 'transparent',
-          border: '1px solid #ddd',
-          borderRadius: '6px',
-          cursor: 'pointer',
-          fontSize: '0.95rem'
-        }}
-      >
-        ← Voltar
-      </button>
-
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -111,14 +141,21 @@ export default function MyEvaluationsPage() {
       }}>
         <div>
           <h1 style={{
-            fontSize: '2rem',
-            marginBottom: '0.5rem',
-            color: '#333'
+            margin: 0,
+            fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+            fontWeight: '700',
+            color: '#1f2937',
+            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
           }}>
             Minhas Avaliações
           </h1>
           <p style={{
-            color: '#666'
+            margin: '0.25rem 0 0 0',
+            color: '#6b7280',
+            fontSize: '0.95rem'
           }}>
             Acompanhe o status das suas solicitações
           </p>
@@ -127,24 +164,26 @@ export default function MyEvaluationsPage() {
         <button
           onClick={() => navigate('/app/patient/nutritionists')}
           style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: '#4caf50',
+            padding: '0.75rem 1.25rem',
+            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
             color: 'white',
             border: 'none',
-            borderRadius: '8px',
+            borderRadius: '10px',
             cursor: 'pointer',
-            fontSize: '0.95rem',
-            fontWeight: '500'
+            fontSize: '0.9rem',
+            fontWeight: '600',
+            boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+            whiteSpace: 'nowrap'
           }}
         >
-          + Nova Avaliação
+          + Nova
         </button>
       </div>
 
       <div style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '1rem'
+        gap: '0.75rem'
       }}>
         {evaluations.map(evaluation => {
           const status = STATUS_MAP[evaluation.status as keyof typeof STATUS_MAP] || STATUS_MAP.pending;
@@ -157,9 +196,11 @@ export default function MyEvaluationsPage() {
               key={evaluation.id}
               style={{
                 backgroundColor: 'white',
-                border: '1px solid #e5e5e5',
-                borderRadius: '12px',
-                padding: '1.5rem'
+                border: '1px solid #e5e7eb',
+                borderRadius: '16px',
+                padding: '1.5rem',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+                transition: 'all 0.3s ease'
               }}
             >
               <div style={{

@@ -9,11 +9,30 @@ export default function NutritionistsListPage() {
     return (
       <div style={{
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh'
+        minHeight: '400px',
+        gap: '1rem'
       }}>
-        <p>Carregando nutricionistas...</p>
+        <div style={{
+          fontSize: '3rem'
+        }}>👩‍⚕️</div>
+        <div style={{
+          width: '48px',
+          height: '48px',
+          border: '4px solid #d1fae5',
+          borderTop: '4px solid #10b981',
+          borderRadius: '50%',
+          animation: 'spin 1s linear infinite'
+        }} />
+        <p style={{ color: '#6b7280', fontSize: '0.95rem' }}>Carregando nutricionistas...</p>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
     );
   }
@@ -26,18 +45,25 @@ export default function NutritionistsListPage() {
         padding: '2rem',
         textAlign: 'center'
       }}>
-        <p style={{ color: '#f44336', marginBottom: '1rem' }}>
-          Erro ao carregar nutricionistas
+        <div style={{
+          fontSize: '4rem',
+          marginBottom: '1rem'
+        }}>😕</div>
+        <h2 style={{ color: '#1f2937', marginBottom: '0.5rem' }}>Ops! Algo deu errado</h2>
+        <p style={{ color: '#6b7280', marginBottom: '1.5rem' }}>
+          Não foi possível carregar os nutricionistas
         </p>
         <button
           onClick={() => window.location.reload()}
           style={{
             padding: '0.75rem 1.5rem',
-            backgroundColor: '#4caf50',
+            backgroundColor: '#10b981',
             color: 'white',
             border: 'none',
             borderRadius: '8px',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            fontSize: '1rem',
+            fontWeight: '600'
           }}
         >
           Tentar novamente
@@ -54,8 +80,20 @@ export default function NutritionistsListPage() {
         padding: '2rem',
         textAlign: 'center'
       }}>
-        <h2 style={{ marginBottom: '0.5rem' }}>Nenhum nutricionista disponível</h2>
-        <p style={{ color: '#666' }}>
+        <div style={{
+          fontSize: '5rem',
+          marginBottom: '1.5rem'
+        }}>👩‍⚕️</div>
+        <h2 style={{ 
+          fontSize: '1.5rem',
+          fontWeight: '700',
+          color: '#1f2937',
+          marginBottom: '0.75rem'
+        }}>Nenhum nutricionista disponível</h2>
+        <p style={{
+          color: '#6b7280',
+          fontSize: '1.05rem'
+        }}>
           Não há nutricionistas cadastrados no momento
         </p>
       </div>
@@ -66,40 +104,38 @@ export default function NutritionistsListPage() {
     <div style={{
       maxWidth: '900px',
       margin: '0 auto',
-      padding: '2rem 1rem'
+      padding: 'clamp(1rem, 3vw, 1.5rem)',
+      paddingBottom: '6rem',
+      background: 'linear-gradient(to bottom, #f0fdf4 0%, #ffffff 300px)'
     }}>
-      <button
-        onClick={() => navigate('/app/patient/timeline')}
-        style={{
-          marginBottom: '1.5rem',
-          padding: '0.5rem 1rem',
-          backgroundColor: 'transparent',
-          border: '1px solid #ddd',
-          borderRadius: '6px',
-          cursor: 'pointer',
-          fontSize: '0.95rem'
-        }}
-      >
-        ← Voltar
-      </button>
-
-      <h1 style={{
-        fontSize: '2rem',
-        marginBottom: '0.5rem',
-        color: '#333'
-      }}>
-        Nutricionistas Disponíveis
-      </h1>
-      <p style={{
-        color: '#666',
+      <div style={{
         marginBottom: '2rem'
       }}>
-        Escolha um nutricionista para solicitar uma avaliação
-      </p>
+        <h1 style={{
+          margin: 0,
+          fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+          fontWeight: '700',
+          color: '#1f2937',
+          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          marginBottom: '0.25rem'
+        }}>
+          Nutricionistas Disponíveis
+        </h1>
+        <p style={{
+          margin: 0,
+          color: '#6b7280',
+          fontSize: '0.95rem'
+        }}>
+          Escolha um nutricionista para solicitar uma avaliação
+        </p>
+      </div>
 
       <div style={{
         display: 'grid',
-        gap: '1.5rem',
+        gap: '1rem',
         gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))'
       }}>
         {nutritionists.map(nutritionist => (
@@ -107,12 +143,25 @@ export default function NutritionistsListPage() {
             key={nutritionist.id}
             style={{
               backgroundColor: 'white',
-              border: '1px solid #e5e5e5',
-              borderRadius: '12px',
+              border: '1px solid #e5e7eb',
+              borderRadius: '16px',
               padding: '1.5rem',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1rem'
+              gap: '1rem',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+              transition: 'all 0.3s ease',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 8px 24px rgba(16, 185, 129, 0.15)';
+              e.currentTarget.style.borderColor = '#10b981';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.05)';
+              e.currentTarget.style.borderColor = '#e5e7eb';
             }}
           >
             <div style={{
@@ -121,15 +170,16 @@ export default function NutritionistsListPage() {
               gap: '1rem'
             }}>
               <div style={{
-                width: '60px',
-                height: '60px',
+                width: '64px',
+                height: '64px',
                 borderRadius: '50%',
-                backgroundColor: '#e3f2fd',
+                backgroundColor: '#d1fae5',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1.8rem',
-                flexShrink: 0
+                fontSize: '2rem',
+                flexShrink: 0,
+                border: '2px solid #10b981'
               }}>
                 {nutritionist.avatar_url ? (
                   <img
@@ -146,11 +196,13 @@ export default function NutritionistsListPage() {
                   '👨‍⚕️'
                 )}
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <h3 style={{
                   margin: 0,
-                  fontSize: '1.2rem',
-                  color: '#333'
+                  fontSize: '1.15rem',
+                  color: '#1f2937',
+                  fontWeight: '700',
+                  wordBreak: 'break-word'
                 }}>
                   {nutritionist.full_name}
                 </h3>
@@ -161,13 +213,14 @@ export default function NutritionistsListPage() {
                   marginTop: '0.25rem'
                 }}>
                   <span style={{
-                    color: '#ffa726',
-                    fontSize: '0.9rem'
+                    color: '#fbbf24',
+                    fontSize: '0.9rem',
+                    fontWeight: '600'
                   }}>
                     ⭐ {nutritionist.rating.toFixed(1)}
                   </span>
                   <span style={{
-                    color: '#999',
+                    color: '#6b7280',
                     fontSize: '0.85rem'
                   }}>
                     ({nutritionist.total_evaluations} avaliações)
@@ -179,9 +232,9 @@ export default function NutritionistsListPage() {
             {nutritionist.bio && (
               <p style={{
                 margin: 0,
-                color: '#666',
+                color: '#6b7280',
                 fontSize: '0.95rem',
-                lineHeight: '1.5'
+                lineHeight: '1.6'
               }}>
                 {nutritionist.bio}
               </p>
@@ -197,11 +250,13 @@ export default function NutritionistsListPage() {
                   <span
                     key={idx}
                     style={{
-                      padding: '0.25rem 0.75rem',
-                      backgroundColor: '#e8f5e9',
-                      color: '#2e7d32',
-                      borderRadius: '12px',
-                      fontSize: '0.85rem'
+                      padding: '0.35rem 0.85rem',
+                      backgroundColor: '#d1fae5',
+                      color: '#059669',
+                      borderRadius: '20px',
+                      fontSize: '0.8rem',
+                      fontWeight: '600',
+                      letterSpacing: '0.02em'
                     }}
                   >
                     {specialty}
@@ -215,23 +270,24 @@ export default function NutritionistsListPage() {
               alignItems: 'center',
               justifyContent: 'space-between',
               paddingTop: '1rem',
-              borderTop: '1px solid #f0f0f0'
+              borderTop: '1px solid #f3f4f6'
             }}>
               <div>
                 {nutritionist.years_experience && (
                   <p style={{
                     margin: 0,
                     fontSize: '0.85rem',
-                    color: '#666'
+                    color: '#6b7280',
+                    fontWeight: '500'
                   }}>
                     {nutritionist.years_experience} anos de experiência
                   </p>
                 )}
                 <p style={{
                   margin: '0.25rem 0 0 0',
-                  fontSize: '1.1rem',
-                  fontWeight: '600',
-                  color: '#4caf50'
+                  fontSize: '1.25rem',
+                  fontWeight: '700',
+                  color: '#10b981'
                 }}>
                   R$ {nutritionist.consultation_fee.toFixed(2)}
                 </p>
@@ -240,17 +296,26 @@ export default function NutritionistsListPage() {
               <button
                 onClick={() => navigate(`/app/patient/request-evaluation/${nutritionist.id}`)}
                 style={{
-                  padding: '0.75rem 1.5rem',
-                  backgroundColor: '#4caf50',
+                  padding: '0.75rem 1.25rem',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                   color: 'white',
                   border: 'none',
-                  borderRadius: '8px',
+                  borderRadius: '10px',
                   cursor: 'pointer',
-                  fontSize: '0.95rem',
-                  fontWeight: '500'
+                  fontSize: '0.9rem',
+                  fontWeight: '600',
+                  boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
+                  transition: 'all 0.2s ease',
+                  whiteSpace: 'nowrap'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
                 }}
               >
-                Solicitar Avaliação
+                Solicitar
               </button>
             </div>
           </div>

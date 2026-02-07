@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Meal } from '~/shared/types';
 
 const MEAL_TYPE_LABELS: Record<string, string> = {
@@ -16,19 +17,29 @@ interface MealCardProps {
 }
 
 export function MealCard({ meal, onDelete, onEdit }: MealCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  
   const formattedDate = new Date(meal.date + 'T00:00:00').toLocaleDateString('pt-BR', {
     day: '2-digit',
     month: 'long'
   });
 
   return (
-    <div style={{
-      backgroundColor: 'white',
-      border: '1px solid #e5e5e5',
-      borderRadius: '12px',
-      padding: '1.25rem',
-      marginBottom: '1rem'
-    }}>
+    <div 
+      style={{
+        backgroundColor: 'white',
+        border: isHovered ? '1px solid #10b981' : '1px solid #e5e7eb',
+        borderRadius: '16px',
+        padding: '1.25rem',
+        marginBottom: '1rem',
+        boxShadow: isHovered ? '0 8px 24px rgba(16, 185, 129, 0.15)' : '0 1px 3px rgba(0, 0, 0, 0.05)',
+        transition: 'all 0.3s ease',
+        cursor: 'pointer',
+        transform: isHovered ? 'translateY(-2px)' : 'translateY(0)'
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -38,19 +49,21 @@ export function MealCard({ meal, onDelete, onEdit }: MealCardProps) {
         <div>
           <div style={{
             display: 'inline-block',
-            padding: '0.25rem 0.75rem',
-            backgroundColor: '#e3f2fd',
-            color: '#1976d2',
-            borderRadius: '12px',
-            fontSize: '0.85rem',
-            fontWeight: '500',
-            marginBottom: '0.5rem'
+            padding: '0.35rem 0.85rem',
+            backgroundColor: '#d1fae5',
+            color: '#059669',
+            borderRadius: '20px',
+            fontSize: '0.8rem',
+            fontWeight: '600',
+            marginBottom: '0.5rem',
+            letterSpacing: '0.02em'
           }}>
             {MEAL_TYPE_LABELS[meal.meal_type] || meal.meal_type}
           </div>
           <div style={{
-            color: '#666',
-            fontSize: '0.9rem'
+            color: '#6b7280',
+            fontSize: '0.9rem',
+            fontWeight: '500'
           }}>
             {meal.time.slice(0, 5)} • {formattedDate}
           </div>
@@ -62,11 +75,20 @@ export function MealCard({ meal, onDelete, onEdit }: MealCardProps) {
               onClick={() => onEdit(meal.id)}
               style={{
                 padding: '0.5rem 0.75rem',
-                backgroundColor: 'transparent',
-                border: '1px solid #ddd',
-                borderRadius: '6px',
+                backgroundColor: '#f9fafb',
+                border: '1px solid #e5e7eb',
+                borderRadius: '8px',
                 cursor: 'pointer',
-                fontSize: '0.85rem'
+                fontSize: '0.85rem',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#10b981';
+                e.currentTarget.style.borderColor = '#10b981';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#f9fafb';
+                e.currentTarget.style.borderColor = '#e5e7eb';
               }}
             >
               ✏️
@@ -81,12 +103,23 @@ export function MealCard({ meal, onDelete, onEdit }: MealCardProps) {
               }}
               style={{
                 padding: '0.5rem 0.75rem',
-                backgroundColor: 'transparent',
-                border: '1px solid #f44336',
-                borderRadius: '6px',
+                backgroundColor: '#fef2f2',
+                border: '1px solid #fecaca',
+                borderRadius: '8px',
                 cursor: 'pointer',
                 fontSize: '0.85rem',
-                color: '#f44336'
+                color: '#dc2626',
+                transition: 'all 0.2s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#dc2626';
+                e.currentTarget.style.borderColor = '#dc2626';
+                e.currentTarget.style.color = 'white';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#fef2f2';
+                e.currentTarget.style.borderColor = '#fecaca';
+                e.currentTarget.style.color = '#dc2626';
               }}
             >
               🗑️
@@ -98,8 +131,9 @@ export function MealCard({ meal, onDelete, onEdit }: MealCardProps) {
       {meal.photo_url && (
         <div style={{
           marginBottom: '1rem',
-          borderRadius: '8px',
-          overflow: 'hidden'
+          borderRadius: '12px',
+          overflow: 'hidden',
+          border: '1px solid #f3f4f6'
         }}>
           <img
             src={meal.photo_url}
@@ -114,9 +148,10 @@ export function MealCard({ meal, onDelete, onEdit }: MealCardProps) {
       )}
 
       <p style={{
-        color: '#333',
+        color: '#374151',
         lineHeight: '1.6',
-        margin: 0
+        margin: 0,
+        fontSize: '0.95rem'
       }}>
         {meal.description}
       </p>
