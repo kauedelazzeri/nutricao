@@ -22,11 +22,17 @@ export default function Sidebar() {
       {/* User info */}
       <div className="p-4 border-b border-gray-100">
         <div className="flex items-center gap-3">
-          <img
-            src={user?.user_metadata?.avatar_url || '/default-avatar.png'}
-            alt=""
-            className="w-10 h-10 rounded-full bg-gray-200"
-          />
+          {user?.user_metadata?.avatar_url ? (
+            <img
+              src={user.user_metadata.avatar_url}
+              alt=""
+              className="w-10 h-10 rounded-full bg-gray-200"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-xl">
+              👤
+            </div>
+          )}
           <div className="min-w-0">
             <p className="text-sm font-medium text-gray-900 truncate">
               {user?.user_metadata?.full_name || 'Nutricionista'}

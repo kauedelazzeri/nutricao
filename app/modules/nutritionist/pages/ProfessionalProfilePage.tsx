@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '~/shared/contexts/AuthContext';
-import { useNutritionistProfile, useUpdateNutritionistProfile, useCreateNutritionistProfile } from '~/shared/hooks/useNutritionists';
+import { useNutritionistProfile, useUpdateNutritionistProfile, useCreateNutritionistProfile, useUpdateUser, uploadProfilePhoto } from '~/shared/hooks/useNutritionists';
 
 const SPECIALTY_OPTIONS = [
   'Emagrecimento',
@@ -22,8 +22,13 @@ export default function ProfessionalProfilePage() {
   const { data: profile, isLoading } = useNutritionistProfile(user?.id);
   const updateProfile = useUpdateNutritionistProfile();
   const createProfile = useCreateNutritionistProfile();
+  const updateUser = useUpdateUser();
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [fullName, setFullName] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState('');
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [formData, setFormData] = useState({
     specialties: [] as string[],
     bio: '',
@@ -31,6 +36,13 @@ export default function ProfessionalProfilePage() {
     consultation_fee: 0,
     available: true
   });
+
+  useEffect(() => {
+    if (user) {
+      setFullName(user.user_metadata?.full_name || '');
+      setAvatarUrl(user.user_metadata?.avatar_url || '');
+    }
+  }, [user]);
 
   useEffect(() => {
     if (profile) {
@@ -44,28 +56,105 @@ export default function ProfessionalProfilePage() {
     }
   }, [profile]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploadingPhoto(true);
+      const url = await uploadProfilePhoto(file);
+      setAvatarUrl(url);
+      
+      if (user?.id) {
+        updateUser.mutate({
+          userId: user.id,
+          avatarUrl: url
+        }, {
+          onSettled: () => {
+            setUploadingPhoto(false);
+          }
+        });
+      } else {
+        setUploadingPhoto(false);
+      }
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      alert('Erro ao fazer upload da foto');
+      setUploadingPhoto(false);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!user?.id) return;
+    
+    setIsSaving(true);
 
-    try {
+    // Timeout de segurança: se em 2s não resolveu, libera a UI
+    const safetyTimeout = setTimeout(() => {
+      console.log('Safety timeout: forcing UI update');
+      setIsEditing(false);
+      setIsSaving(false);
+    }, 2000);
+
+    // Atualiza nome se foi alterado
+    if (fullName !== user.user_metadata?.full_name) {
+      updateUser.mutate({
+        userId: user.id,
+        fullName
+      }, {
+        onSettled: () => {
+          clearTimeout(safetyTimeout);
+          // Atualiza perfil profissional após nome
+          if (profile) {
+            updateProfile.mutate({
+              userId: user.id,
+              data: formData
+            }, {
+              onSettled: () => {
+                setIsEditing(false);
+                setIsSaving(false);
+              }
+            });
+          } else {
+            createProfile.mutate({
+              userId: user.id,
+              data: formData
+            }, {
+              onSettled: () => {
+                setIsEditing(false);
+                setIsSaving(false);
+              }
+            });
+          }
+        }
+      });
+    } else {
+      // Se nome não mudou, só atualiza perfil
       if (profile) {
-        await updateProfile.mutateAsync({
+        updateProfile.mutate({
           userId: user.id,
           data: formData
+        }, {
+          onSettled: () => {
+            clearTimeout(safetyTimeout);
+            setIsEditing(false);
+            setIsSaving(false);
+          }
         });
       } else {
-        await createProfile.mutateAsync({
+        createProfile.mutate({
           userId: user.id,
           data: formData
+        }, {
+          onSettled: () => {
+            clearTimeout(safetyTimeout);
+            setIsEditing(false);
+            setIsSaving(false);
+          }
         });
       }
-      setIsEditing(false);
-      alert('Perfil atualizado com sucesso!');
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      alert('Erro ao atualizar perfil. Tente novamente.');
     }
   };
 
@@ -133,7 +222,7 @@ export default function ProfessionalProfilePage() {
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
         border: '1px solid #e5e7eb'
       }}>
-        {/* User Info (Read-only) */}
+        {/* User Info (Editável) */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
@@ -142,26 +231,94 @@ export default function ProfessionalProfilePage() {
           borderBottom: '1px solid #e5e7eb',
           marginBottom: '1.5rem'
         }}>
-          <img
-            src={user?.user_metadata?.avatar_url || '/default-avatar.png'}
-            alt=""
-            style={{
-              width: '80px',
-              height: '80px',
-              borderRadius: '50%',
-              backgroundColor: '#e5e7eb'
-            }}
-          />
-          <div>
-            <h2 style={{
-              fontSize: '1.25rem',
-              fontWeight: '600',
-              color: '#1f2937',
-              marginBottom: '0.25rem'
-            }}>{user?.user_metadata?.full_name || 'Nutricionista'}</h2>
+          <div style={{ position: 'relative' }}>
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt=""
+                style={{
+                  width: '80px',
+                  height: '80px',
+                  borderRadius: '50%',
+                  backgroundColor: '#e5e7eb',
+                  objectFit: 'cover'
+                }}
+              />
+            ) : (
+              <div style={{
+                width: '80px',
+                height: '80px',
+                borderRadius: '50%',
+                backgroundColor: '#e5e7eb',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '2.5rem'
+              }}>
+                👤
+              </div>
+            )}
+            {isEditing && (
+              <>
+                <input
+                  type="file"
+                  id="photo-upload"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  style={{ display: 'none' }}
+                />
+                <label
+                  htmlFor="photo-upload"
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    right: 0,
+                    width: '28px',
+                    height: '28px',
+                    backgroundColor: '#10b981',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: uploadingPhoto ? 'not-allowed' : 'pointer',
+                    border: '2px solid white',
+                    fontSize: '0.75rem'
+                  }}
+                >
+                  {uploadingPhoto ? '⏳' : '📷'}
+                </label>
+              </>
+            )}
+          </div>
+          <div style={{ flex: 1 }}>
+            {isEditing ? (
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Seu nome completo"
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '6px',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  marginBottom: '0.25rem'
+                }}
+              />
+            ) : (
+              <h2 style={{
+                fontSize: '1.25rem',
+                fontWeight: '600',
+                color: '#1f2937',
+                marginBottom: '0.25rem'
+              }}>{fullName || 'Nutricionista'}</h2>
+            )}
             <p style={{
               fontSize: '0.9rem',
-              color: '#6b7280'
+              color: '#6b7280',
+              margin: 0
             }}>{user?.email}</p>
           </div>
         </div>
@@ -406,21 +563,21 @@ export default function ProfessionalProfilePage() {
             }}>
               <button
                 type="submit"
-                disabled={updateProfile.isPending || createProfile.isPending}
+                disabled={isSaving}
                 style={{
                   flex: 1,
-                  padding: '0.875rem',
+                  padding: '12px',
                   backgroundColor: '#10b981',
                   color: 'white',
                   border: 'none',
                   borderRadius: '8px',
                   fontSize: '1rem',
                   fontWeight: '600',
-                  cursor: updateProfile.isPending || createProfile.isPending ? 'not-allowed' : 'pointer',
-                  opacity: updateProfile.isPending || createProfile.isPending ? 0.5 : 1
+                  cursor: isSaving ? 'not-allowed' : 'pointer',
+                  opacity: isSaving ? 0.5 : 1
                 }}
               >
-                {updateProfile.isPending || createProfile.isPending ? 'Salvando...' : '✅ Salvar Alterações'}
+                {isSaving ? 'Salvando...' : 'Salvar Alterações'}
               </button>
               <button
                 type="button"

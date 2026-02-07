@@ -27,6 +27,7 @@ export default [
     route("app/patient/my-evaluations", "modules/patient/pages/MyEvaluationsPage.tsx"),
   ]),
 
+  // APP - Produção com Supabase - Nutricionista
   layout("modules/nutritionist/layouts/NutritionistLayout.tsx", [
     route("app/nutritionist/dashboard", "modules/nutritionist/pages/NutritionistDashboardPage.tsx"),
     route("app/nutritionist/evaluation/:evaluationId", "modules/nutritionist/pages/EvaluationDetailPage.tsx"),
@@ -39,18 +40,6 @@ export default [
     route("demo/patient/timeline", "modules/patient/pages/TimelinePage.tsx"),
     route("demo/patient/evaluations", "modules/patient/pages/EvaluationsPage.tsx"),
     route("demo/patient/profile", "modules/patient/pages/HealthProfilePage.tsx"),
-  ]),
-
-  layout("modules/nutritionist/layouts/NutritionistLayout.tsx", [
-    route("demo/nutritionist/dashboard", "modules/nutritionist/pages/DashboardPage.tsx"),
-    route(
-      "demo/nutritionist/request/:id",
-      "modules/nutritionist/pages/RequestDetailPage.tsx"
-    ),
-    route(
-      "demo/nutritionist/profile",
-      "modules/nutritionist/pages/ProfessionalProfilePage.tsx"
-    ),
   ]),
 
   // TODO: Rotas de produção (a serem criadas nos sprints)

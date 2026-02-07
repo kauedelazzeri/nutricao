@@ -36,21 +36,6 @@ export default function NutritionistDashboardPage() {
       margin: '0 auto',
       padding: '2rem 1rem'
     }}>
-      <button
-        onClick={() => navigate('/app/nutritionist/dashboard')}
-        style={{
-          marginBottom: '1.5rem',
-          padding: '0.5rem 1rem',
-          backgroundColor: 'transparent',
-          border: '1px solid #ddd',
-          borderRadius: '6px',
-          cursor: 'pointer',
-          fontSize: '0.95rem'
-        }}
-      >
-        ← Voltar
-      </button>
-
       <h1 style={{
         fontSize: '2rem',
         marginBottom: '0.5rem',

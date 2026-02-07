@@ -6,44 +6,44 @@ export function useNutritionists() {
   return useQuery({
     queryKey: ['nutritionists'],
     queryFn: async () => {
-      // Primeiro busca apenas nutritionists
+      // Busca nutritionists com dados de users em uma query
       const { data, error } = await supabase
         .from('nutritionists')
-        .select('*')
+        .select(`
+          *,
+          users!inner (
+            id,
+            full_name,
+            email,
+            avatar_url
+          )
+        `)
+        .eq('available', true)
         .order('rating', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching nutritionists:', error);
+        throw error;
+      }
       
       if (!data || data.length === 0) {
         return [];
       }
 
-      // Depois busca os dados de users para cada nutricionista
-      const nutritionistsWithUsers = await Promise.all(
-        data.map(async (n: any) => {
-          const { data: userData } = await supabase
-            .from('users')
-            .select('id, full_name, email, avatar_url')
-            .eq('id', n.id)
-            .maybeSingle();
-
-          return {
-            id: n.id,
-            full_name: userData?.full_name || 'Nutricionista',
-            email: userData?.email || '',
-            avatar_url: userData?.avatar_url || null,
-            specialties: n.specialties || [],
-            bio: n.bio,
-            years_experience: n.years_experience,
-            consultation_fee: parseFloat(n.consultation_fee),
-            rating: parseFloat(n.rating),
-            total_evaluations: n.total_evaluations,
-            available: n.available
-          };
-        })
-      );
-
-      return nutritionistsWithUsers;
+      // Mapeia os dados para o formato esperado
+      return data.map((n: any) => ({
+        id: n.id,
+        full_name: n.users?.full_name || 'Nutricionista',
+        email: n.users?.email || '',
+        avatar_url: n.users?.avatar_url || null,
+        specialties: n.specialties || [],
+        bio: n.bio || null,
+        years_experience: n.years_experience || 0,
+        consultation_fee: n.consultation_fee ? parseFloat(n.consultation_fee) : 0,
+        rating: n.rating ? parseFloat(n.rating) : 0,
+        total_evaluations: n.total_evaluations || 0,
+        available: n.available
+      }));
     }
   });
 }
@@ -134,4 +134,96 @@ export function useCreateNutritionistProfile() {
       queryClient.invalidateQueries({ queryKey: ['nutritionists'] });
     }
   });
+}
+
+// Hook para atualizar informações do usuário (nome e avatar)
+export function useUpdateUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ 
+      userId, 
+      fullName, 
+      avatarUrl 
+    }: { 
+      userId: string; 
+      fullName?: string; 
+      avatarUrl?: string;
+    }) => {
+      const updates: any = {
+        updated_at: new Date().toISOString()
+      };
+
+      if (fullName !== undefined) {
+        updates.full_name = fullName;
+      }
+
+      if (avatarUrl !== undefined) {
+        updates.avatar_url = avatarUrl;
+      }
+
+      // Atualiza a tabela users
+      const { error: dbError } = await supabase
+        .from('users')
+        .update(updates)
+        .eq('id', userId);
+
+      if (dbError) {
+        console.error('Error updating users table:', dbError);
+        throw dbError;
+      }
+
+      // Atualiza os metadados do usuário no auth
+      if (fullName !== undefined || avatarUrl !== undefined) {
+        const metadataUpdates: any = {};
+        if (fullName !== undefined) metadataUpdates.full_name = fullName;
+        if (avatarUrl !== undefined) metadataUpdates.avatar_url = avatarUrl;
+
+        const { error: authError } = await supabase.auth.updateUser({
+          data: metadataUpdates
+        });
+
+        if (authError) {
+          console.error('Error updating auth metadata:', authError);
+          throw authError;
+        }
+      }
+
+      console.log('User updated successfully');
+    },
+    onSuccess: async (_, variables) => {
+      // Invalida queries mas não espera reload (evita delay)
+      queryClient.invalidateQueries({ queryKey: ['nutritionist-profile', variables.userId] });
+      queryClient.invalidateQueries({ queryKey: ['nutritionists'] });
+      
+      // Força reload do user auth sem bloquear
+      await supabase.auth.getUser();
+    },
+    onError: (error) => {
+      console.error('Mutation error:', error);
+    }
+  });
+}
+
+// Função helper para upload de foto de perfil no Cloudinary
+export async function uploadProfilePhoto(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'nutricao_profiles');
+  formData.append('folder', 'nutricao/profiles');
+
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`,
+    {
+      method: 'POST',
+      body: formData
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error('Erro ao fazer upload da foto');
+  }
+
+  const data = await response.json();
+  return data.secure_url;
 }
