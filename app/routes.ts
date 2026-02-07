@@ -9,9 +9,6 @@ export default [
   // Public - Landing page (manter no root)
   index("modules/auth/LoginPage.tsx"),
 
-  // TEST - Página de teste (remover depois)
-  route("test/cloudinary", "modules/test/CloudinaryTestPage.tsx"),
-
   // DEMO - Protótipo navegável com dados mockados
   layout("modules/patient/layouts/PatientLayout.tsx", [
     route("demo/patient/timeline", "modules/patient/pages/TimelinePage.tsx"),
