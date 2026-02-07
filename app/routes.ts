@@ -7,7 +7,13 @@ import {
 
 export default [
   // Public - Landing page (manter no root)
-  index("modules/auth/LoginPage.tsx"),
+  index("routes/_index.tsx"),
+
+  // AUTH - Autenticação e setup
+  route("auth/login", "modules/auth/pages/LoginPage.tsx"),
+  route("auth/callback", "modules/auth/pages/CallbackPage.tsx"),
+  route("auth/setup", "modules/auth/pages/SetupPage.tsx"),
+  route("dashboard", "modules/auth/pages/DashboardPage.tsx"),
 
   // DEMO - Protótipo navegável com dados mockados
   layout("modules/patient/layouts/PatientLayout.tsx", [
