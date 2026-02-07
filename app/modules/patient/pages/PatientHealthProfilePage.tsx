@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useHealthProfile, useSaveHealthProfile } from '~/shared/hooks/useHealthProfile';
+import { supabase } from '~/shared/services/supabase';
 
 const ACTIVITY_LEVELS = [
   { value: 'sedentary', label: 'Sedentário (pouco ou nenhum exercício)' },
@@ -34,6 +35,16 @@ export default function PatientHealthProfilePage() {
       setAllergies(profile.allergies?.join(', ') || '');
     }
   }, [profile]);
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+      alert('Erro ao fazer logout. Tente novamente.');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -111,26 +122,61 @@ export default function PatientHealthProfilePage() {
       <div style={{
         marginBottom: '2rem'
       }}>
-        <h1 style={{
-          margin: 0,
-          fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-          fontWeight: '700',
-          color: '#1f2937',
-          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          marginBottom: '0.25rem'
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          marginBottom: '0.5rem'
         }}>
-          Perfil de Saúde
-        </h1>
-        <p style={{
-          margin: 0,
-          color: '#6b7280',
-          fontSize: '0.95rem'
-        }}>
-          Mantenha suas informações atualizadas para avaliações mais precisas
-        </p>
+          <div>
+            <h1 style={{
+              margin: 0,
+              fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+              fontWeight: '700',
+              color: '#1f2937',
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              marginBottom: '0.25rem'
+            }}>
+              Perfil de Saúde
+            </h1>
+            <p style={{
+              margin: 0,
+              color: '#6b7280',
+              fontSize: '0.95rem'
+            }}>
+              Mantenha suas informações atualizadas para avaliações mais precisas
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            type="button"
+            style={{
+              padding: '0.75rem 1.25rem',
+              backgroundColor: 'white',
+              color: '#dc2626',
+              border: '1px solid #fecaca',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              fontSize: '0.9rem',
+              fontWeight: '600',
+              transition: 'all 0.2s ease',
+              whiteSpace: 'nowrap'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = '#dc2626';
+              e.currentTarget.style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'white';
+              e.currentTarget.style.color = '#dc2626';
+            }}
+          >
+            🚪 Sair
+          </button>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} style={{
