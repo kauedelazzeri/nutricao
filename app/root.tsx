@@ -13,6 +13,15 @@ import { AuthProvider } from "~/shared/contexts/AuthContext";
 import { QueryProvider } from "~/shared/contexts/QueryProvider";
 import "./app.css";
 
+// Suprimir aviso do React DevTools no console
+if (typeof window !== 'undefined') {
+  const originalWarn = console.warn;
+  console.warn = (...args) => {
+    if (args[0]?.includes?.('React DevTools')) return;
+    originalWarn(...args);
+  };
+}
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {

@@ -41,22 +41,17 @@ export function useAddMeal() {
 
   return useMutation({
     mutationFn: async (meal: MealInput) => {
-      console.log('🔵 useAddMeal: Iniciando...', meal);
-      
       let photoUrl: string | undefined;
       let photoPublicId: string | undefined;
 
       // Upload de foto se existir
       if (meal.photo) {
-        console.log('📸 Uploading photo to Cloudinary...');
         const result = await uploadMealPhoto(meal.photo);
         photoUrl = result.secure_url;
         photoPublicId = result.public_id;
-        console.log('✅ Photo uploaded:', { photoUrl, photoPublicId });
       }
 
       const userId = (await supabase.auth.getUser()).data.user?.id;
-      console.log('👤 User ID:', userId);
 
       if (!userId) {
         throw new Error('User not authenticated');
@@ -72,28 +67,17 @@ export function useAddMeal() {
         user_id: userId
       };
 
-      console.log('💾 Inserting into Supabase:', insertData);
-
       const { data, error } = await supabase
         .from('meals')
         .insert(insertData as any)
         .select()
         .single();
 
-      if (error) {
-        console.error('❌ Supabase error:', error);
-        throw error;
-      }
-      
-      console.log('✅ Meal inserted:', data);
+      if (error) throw error;
       return data as Meal;
     },
     onSuccess: () => {
-      console.log('🔄 Invalidating meals query cache...');
       queryClient.invalidateQueries({ queryKey: ['meals'] });
-    },
-    onError: (error) => {
-      console.error('💥 Mutation error:', error);
     }
   });
 }
