@@ -172,6 +172,32 @@ export default function DashboardPage() {
           </div>
         )}
 
+        {/* Actions para Nutricionista */}
+        {userType === 'nutritionist' && (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            marginBottom: '1.5rem'
+          }}>
+            <button
+              onClick={() => navigate('/app/nutritionist/dashboard')}
+              style={{
+                padding: '1rem',
+                backgroundColor: '#4caf50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: '500'
+              }}
+            >
+              📊 Painel de Avaliações
+            </button>
+          </div>
+        )}
+
         <div style={{
           display: 'flex',
           flexDirection: 'column',
