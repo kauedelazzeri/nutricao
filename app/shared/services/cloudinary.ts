@@ -49,6 +49,14 @@ export async function uploadMealPhoto(file: File): Promise<CloudinaryResponse> {
 }
 
 /**
+ * Alias para uploadMealPhoto (para compatibilidade)
+ */
+export async function uploadToCloudinary(file: File): Promise<string> {
+  const result = await uploadMealPhoto(file);
+  return result.secure_url;
+}
+
+/**
  * Deleta uma foto do Cloudinary (requer assinatura backend)
  * Por ora, apenas loga - implementar backend function futuramente
  * @param publicId - Public ID da imagem no Cloudinary

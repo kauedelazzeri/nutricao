@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useMeals, useDeleteMeal } from '~/shared/hooks/useMeals';
 import { MealCard } from '~/shared/components/MealCard';
+import QuickCaptureModal from '~/shared/components/QuickCaptureModal';
 import type { Meal } from '~/shared/types';
 
 interface GroupedMeals {
@@ -9,8 +11,9 @@ interface GroupedMeals {
 
 export default function PatientTimelinePage() {
   const navigate = useNavigate();
-  const { data: meals, isLoading, error } = useMeals();
+  const { data: meals, isLoading, error, refetch } = useMeals();
   const deleteMeal = useDeleteMeal();
+  const [showCaptureModal, setShowCaptureModal] = useState(false);
 
   const handleDelete = async (id: string) => {
     try {
@@ -135,82 +138,88 @@ export default function PatientTimelinePage() {
   );
 
   return (
-    <div style={{
-      maxWidth: '600px',
-      margin: '0 auto',
-      padding: '2rem 1rem'
-    }}>
+    <>
       <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '2rem'
+        maxWidth: '800px',
+        margin: '0 auto',
+        padding: '1rem',
+        paddingBottom: '6rem' // Espaço para bottom bar
       }}>
-        <h1 style={{ margin: 0 }}>Timeline de Refeições</h1>
-        <button
-          onClick={() => navigate('/app/patient/register-meal')}
-          style={{
-            padding: '0.75rem 1.5rem',
-            backgroundColor: '#4caf50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontWeight: '500'
-          }}
-        >
-          + Nova Refeição
-        </button>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '1.5rem'
+        }}>
+          <h1 style={{ margin: 0, fontSize: '1.5rem' }}>Timeline</h1>
+        </div>
+
+        {sortedDates.map(date => {
+          const dateObj = new Date(date + 'T00:00:00');
+          const formattedDate = dateObj.toLocaleDateString('pt-BR', {
+            weekday: 'long',
+            day: '2-digit',
+            month: 'long'
+          });
+
+          return (
+            <div key={date} style={{ marginBottom: '2rem' }}>
+              <h2 style={{
+                fontSize: '0.95rem',
+                color: '#6b7280',
+                marginBottom: '1rem',
+                textTransform: 'capitalize',
+                fontWeight: '500'
+              }}>
+                {formattedDate}
+              </h2>
+              
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {groupedMeals[date].map(meal => (
+                  <MealCard
+                    key={meal.id}
+                    meal={meal}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                  />
+                ))}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
+      {/* Botão flutuante de captura */}
       <button
-        onClick={() => navigate('/dashboard')}
+        onClick={() => setShowCaptureModal(true)}
         style={{
-          marginBottom: '1.5rem',
-          padding: '0.5rem 1rem',
-          backgroundColor: 'transparent',
-          border: '1px solid #ddd',
-          borderRadius: '6px',
+          position: 'fixed',
+          bottom: '80px', // Acima do bottom bar
+          right: '20px',
+          width: '64px',
+          height: '64px',
+          borderRadius: '50%',
+          backgroundColor: '#10b981',
+          color: 'white',
+          border: 'none',
+          fontSize: '2rem',
           cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(16, 185, 129, 0.4)',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.5rem'
+          justifyContent: 'center',
+          zIndex: 100
         }}
       >
-        ← Voltar ao dashboard
+        +
       </button>
 
-      {sortedDates.map(date => {
-        const dateObj = new Date(date + 'T00:00:00');
-        const formattedDate = dateObj.toLocaleDateString('pt-BR', {
-          weekday: 'long',
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric'
-        });
-
-        return (
-          <div key={date} style={{ marginBottom: '2.5rem' }}>
-            <h2 style={{
-              fontSize: '1.1rem',
-              color: '#666',
-              marginBottom: '1rem',
-              textTransform: 'capitalize'
-            }}>
-              {formattedDate}
-            </h2>
-            
-            {groupedMeals[date].map(meal => (
-              <MealCard
-                key={meal.id}
-                meal={meal}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-              />
-            ))}
-          </div>
-        );
-      })}
-    </div>
+      {/* Modal de captura rápida */}
+      <QuickCaptureModal
+        isOpen={showCaptureModal}
+        onClose={() => setShowCaptureModal(false)}
+        onSuccess={() => refetch()}
+      />
+    </>
   );
 }

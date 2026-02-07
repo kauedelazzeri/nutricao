@@ -19,8 +19,12 @@ export default function CallbackPage() {
       // Primeiro acesso - precisa escolher tipo de usuário
       navigate('/auth/setup');
     } else {
-      // Usuário existente - redireciona para dashboard
-      navigate('/dashboard');
+      // Usuário existente - redireciona conforme tipo
+      if (userType === 'patient') {
+        navigate('/app/patient/timeline');
+      } else {
+        navigate('/app/nutritionist/dashboard');
+      }
     }
   }, [user, userType, loading, navigate]);
 
@@ -37,7 +41,7 @@ export default function CallbackPage() {
         width: '48px',
         height: '48px',
         border: '4px solid #f3f3f3',
-        borderTop: '4px solid #4285f4',
+        borderTop: '4px solid #10b981',
         borderRadius: '50%',
         animation: 'spin 1s linear infinite'
       }} />

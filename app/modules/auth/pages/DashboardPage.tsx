@@ -219,7 +219,7 @@ export default function DashboardPage() {
           </button>
 
           <button
-            onClick={() => navigate('/demo/patient')}
+            onClick={() => navigate('/demo/patient/timeline')}
             style={{
               padding: '0.5rem 1.5rem',
               fontSize: '0.95rem',

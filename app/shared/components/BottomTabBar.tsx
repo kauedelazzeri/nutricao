@@ -1,9 +1,9 @@
 import { NavLink } from "react-router";
 
 const tabs = [
-  { to: "/app/timeline", icon: "📸", label: "Início" },
-  { to: "/app/evaluations", icon: "📋", label: "Avaliações" },
-  { to: "/app/profile", icon: "👤", label: "Perfil" },
+  { to: "/app/patient/timeline", icon: "📸", label: "Início" },
+  { to: "/app/patient/my-evaluations", icon: "📋", label: "Avaliações" },
+  { to: "/app/patient/health-profile", icon: "👤", label: "Perfil" },
 ];
 
 export default function BottomTabBar() {

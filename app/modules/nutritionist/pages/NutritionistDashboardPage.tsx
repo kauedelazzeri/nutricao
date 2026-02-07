@@ -37,7 +37,7 @@ export default function NutritionistDashboardPage() {
       padding: '2rem 1rem'
     }}>
       <button
-        onClick={() => navigate('/dashboard')}
+        onClick={() => navigate('/app/nutritionist/dashboard')}
         style={{
           marginBottom: '1.5rem',
           padding: '0.5rem 1rem',

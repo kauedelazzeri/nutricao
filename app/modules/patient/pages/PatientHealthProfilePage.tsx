@@ -59,7 +59,7 @@ export default function PatientHealthProfilePage() {
       });
 
       alert('Perfil de saúde atualizado com sucesso!');
-      navigate('/dashboard');
+      navigate('/app/patient/timeline');
     } catch (error: any) {
       console.error('Error saving health profile:', error);
       alert('Erro ao salvar perfil. Tente novamente.');

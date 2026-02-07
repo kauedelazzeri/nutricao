@@ -89,7 +89,7 @@ export default function MyEvaluationsPage() {
       padding: '2rem 1rem'
     }}>
       <button
-        onClick={() => navigate('/dashboard')}
+        onClick={() => navigate('/app/patient/timeline')}
         style={{
           marginBottom: '1.5rem',
           padding: '0.5rem 1rem',

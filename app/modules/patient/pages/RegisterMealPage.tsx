@@ -67,7 +67,7 @@ export default function RegisterMealPage() {
       padding: '2rem 1rem'
     }}>
       <button
-        onClick={() => navigate('/dashboard')}
+        onClick={() => navigate('/app/patient/timeline')}
         style={{
           marginBottom: '1.5rem',
           padding: '0.5rem 1rem',
@@ -269,7 +269,7 @@ export default function RegisterMealPage() {
         }}>
           <button
             type="button"
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/app/patient/timeline')}
             disabled={addMeal.isPending}
             style={{
               flex: 1,
