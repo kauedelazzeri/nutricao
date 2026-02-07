@@ -97,19 +97,47 @@
 
 ## 🎯 Próximas Sprints
 
-### Sprint 4: Avaliações (Planejada)
+### Sprint 4: Avaliações ✅ COMPLETA
 **Funcionalidades paciente:**
-- Solicitar avaliação de nutricionista
-- Ver lista de nutricionistas disponíveis
-- Selecionar período para avaliação
-- Visualizar parecer do nutricionista
+✅ Solicitar avaliação de nutricionista
+✅ Ver lista de nutricionistas disponíveis
+✅ Selecionar período para avaliação
+⚠️ Visualizar parecer do nutricionista (PENDENTE - precisa criar página de visualização)
 
 **Funcionalidades nutricionista:**
-- Dashboard com avaliações pendentes
-- Aceitar/Rejeitar solicitações
-- Ver refeições do paciente no período
-- Escrever parecer nutricional
-- Histórico de avaliações
+✅ Dashboard com avaliações pendentes
+✅ Aceitar/Rejeitar solicitações
+✅ Ver refeições do paciente no período
+✅ Escrever parecer nutricional (salvar rascunho + finalizar)
+✅ Histórico de avaliações (dashboard com estatísticas)
+
+**Detalhes implementados:**
+- Batch loading otimizado (1 query para dashboard, 3 para lista paciente)
+- RLS policies para evaluation_meals e evaluation_health_snapshots
+- Tradução de meal_type para pt-BR
+- Timeline de refeições com fotos ampliáveis
+- Editor de parecer com save/complete
+- Status tracking (pending → accepted → completed)
+
+**Commits:**
+- f8b80af: funcionalidades do paciente (solicitar, listar nutricionistas, ver avaliações)
+- 573093f: dashboard do nutricionista
+- 50ed959: aceitar/rejeitar avaliações
+- 010f15c: visualização de refeições e parecer
+
+### Sprint 5: Paciente Visualizar Feedback (Próxima)
+**Funcionalidade:**
+- Página para paciente ver parecer nutricional completo
+- Exibir status da avaliação (pending/accepted/rejected/completed)
+- Mostrar feedback quando status=completed
+- Mostrar motivo quando status=rejected
+
+### Sprint 6: UI/UX - Landing Page
+**Prioridade**: Melhorar interface antes de novas features
+- Ajustar landing page (`/`) para ficar igual ao protótipo
+- Melhorar design das páginas existentes
+- Adicionar animações e transições
+- Componentizar com melhor estrutura CSS
 
 ### Opção B: Refatoração UI - Aplicar Protótipos
 **Prioridade**: Melhorar interface antes de novas features
