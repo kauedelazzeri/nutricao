@@ -82,6 +82,48 @@ export default function DashboardPage() {
           </p>
         </div>
 
+        {/* Actions para Paciente */}
+        {userType === 'patient' && (
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            marginBottom: '1.5rem'
+          }}>
+            <button
+              onClick={() => navigate('/app/patient/register-meal')}
+              style={{
+                padding: '1rem',
+                backgroundColor: '#4caf50',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: '500'
+              }}
+            >
+              📸 Registrar Refeição
+            </button>
+
+            <button
+              onClick={() => navigate('/app/patient/timeline')}
+              style={{
+                padding: '1rem',
+                backgroundColor: '#2196f3',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: '500'
+              }}
+            >
+              📅 Ver Timeline
+            </button>
+          </div>
+        )}
+
         <div style={{
           display: 'flex',
           flexDirection: 'column',

@@ -274,3 +274,12 @@ export interface Database {
     }
   }
 }
+
+// Helper types para facilitar uso
+export type Meal = Database['public']['Tables']['meals']['Row'];
+export type User = Database['public']['Tables']['users']['Row'];
+export type HealthProfile = Database['public']['Tables']['health_profiles']['Row'];
+export type Nutritionist = Database['public']['Tables']['nutritionists']['Row'];
+export type Evaluation = Database['public']['Tables']['evaluations']['Row'];
+export type EvaluationMeal = Database['public']['Tables']['evaluation_meals']['Row'];
+export type EvaluationHealthSnapshot = Database['public']['Tables']['evaluation_health_snapshots']['Row'];

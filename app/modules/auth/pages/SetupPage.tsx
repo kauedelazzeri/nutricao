@@ -26,31 +26,40 @@ export default function SetupPage() {
           email: user.email!,
           full_name: user.user_metadata.full_name || user.email!.split('@')[0],
           user_type: type
-        });
+        } as any);
 
-      if (userError) throw userError;
+      // Ignorar erro de duplicate key (usuário já existe)
+      if (userError && !userError.message.includes('duplicate key')) {
+        throw userError;
+      }
 
       // Se for nutricionista, criar registro na tabela nutritionists
       if (type === 'nutritionist') {
         const { error: nutritionistError } = await supabase
           .from('nutritionists')
           .insert({
-            user_id: user.id
-            // CRN será adicionado depois pelo nutricionista no perfil
-          });
+            id: user.id,
+            specialties: [], // Será preenchido depois no perfil
+            consultation_fee: 0, // Será preenchido depois no perfil
+            rating: 0,
+            total_evaluations: 0,
+            available: false // Indisponível até preencher perfil
+          } as any);
 
-        if (nutritionistError) throw nutritionistError;
+        // Ignorar erro de duplicate key (nutricionista já existe)
+        if (nutritionistError && !nutritionistError.message.includes('duplicate key')) {
+          throw nutritionistError;
+        }
       }
 
-      // Redirecionar para dashboard
-      navigate('/dashboard');
-      
-      // Recarregar a página para AuthContext atualizar o userType
-      window.location.reload();
+      // Aguardar um pouco para o banco processar
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Redirecionar para dashboard (o AuthContext irá refetch automaticamente)
+      window.location.href = '/dashboard';
     } catch (error) {
       console.error('Error creating user:', error);
       alert('Erro ao configurar conta. Tente novamente.');
-    } finally {
       setLoading(false);
     }
   };

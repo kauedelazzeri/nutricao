@@ -1,5 +1,8 @@
 // ==================== ENUMS ====================
 
+// Re-export database types
+export type { Meal, User as DbUser, HealthProfile as DbHealthProfile, Nutritionist as DbNutritionist, Evaluation, EvaluationMeal, EvaluationHealthSnapshot } from './database';
+
 export type UserRole = "patient" | "nutritionist";
 
 export type MealType =

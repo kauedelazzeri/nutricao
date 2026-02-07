@@ -65,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Usuário não existe na tabela users (primeiro acesso)
         console.log('User not found in database, first access');
         setUserType(null);
-      } else {
+      } else if (data && 'user_type' in data) {
         setUserType(data.user_type as UserType);
       }
     } catch (error) {

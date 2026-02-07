@@ -15,6 +15,10 @@ export default [
   route("auth/setup", "modules/auth/pages/SetupPage.tsx"),
   route("dashboard", "modules/auth/pages/DashboardPage.tsx"),
 
+  // APP - Produção com Supabase
+  route("app/patient/register-meal", "modules/patient/pages/RegisterMealPage.tsx"),
+  route("app/patient/timeline", "modules/patient/pages/PatientTimelinePage.tsx"),
+
   // DEMO - Protótipo navegável com dados mockados
   layout("modules/patient/layouts/PatientLayout.tsx", [
     route("demo/patient/timeline", "modules/patient/pages/TimelinePage.tsx"),
