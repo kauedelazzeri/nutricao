@@ -27,9 +27,12 @@ export default [
     route("app/patient/my-evaluations", "modules/patient/pages/MyEvaluationsPage.tsx"),
   ]),
 
-  route("app/nutritionist/dashboard", "modules/nutritionist/pages/NutritionistDashboardPage.tsx"),
-  route("app/nutritionist/evaluation/:evaluationId", "modules/nutritionist/pages/EvaluationDetailPage.tsx"),
-  route("app/nutritionist/feedback/:evaluationId", "modules/nutritionist/pages/EvaluationFeedbackPage.tsx"),
+  layout("modules/nutritionist/layouts/NutritionistLayout.tsx", [
+    route("app/nutritionist/dashboard", "modules/nutritionist/pages/NutritionistDashboardPage.tsx"),
+    route("app/nutritionist/evaluation/:evaluationId", "modules/nutritionist/pages/EvaluationDetailPage.tsx"),
+    route("app/nutritionist/feedback/:evaluationId", "modules/nutritionist/pages/EvaluationFeedbackPage.tsx"),
+    route("app/nutritionist/profile", "modules/nutritionist/pages/ProfessionalProfilePage.tsx"),
+  ]),
 
   // DEMO - Protótipo navegável com dados mockados
   layout("modules/patient/layouts/PatientLayout.tsx", [

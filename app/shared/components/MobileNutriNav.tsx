@@ -1,13 +1,13 @@
 import { NavLink } from "react-router";
-import { useApp } from "~/shared/contexts/AppContext";
+import { useAuth } from "~/shared/contexts/AuthContext";
 
 const menuItems = [
-  { to: "/nutri/dashboard", icon: "📊", label: "Dashboard" },
-  { to: "/nutri/profile", icon: "👩‍⚕️", label: "Perfil" },
+  { to: "/app/nutritionist/dashboard", icon: "📊", label: "Dashboard" },
+  { to: "/app/nutritionist/profile", icon: "👩‍⚕️", label: "Perfil" },
 ];
 
 export default function MobileNutriNav() {
-  const { logout } = useApp();
+  const { signOut } = useAuth();
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 pb-[env(safe-area-inset-bottom)]">
@@ -29,7 +29,7 @@ export default function MobileNutriNav() {
           </NavLink>
         ))}
         <button
-          onClick={logout}
+          onClick={signOut}
           className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-400 hover:text-red-500 transition-colors"
         >
           <span className="text-xl">🚪</span>

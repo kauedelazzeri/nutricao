@@ -1,13 +1,13 @@
 import { NavLink } from "react-router";
-import { useApp } from "~/shared/contexts/AppContext";
+import { useAuth } from "~/shared/contexts/AuthContext";
 
 const menuItems = [
-  { to: "/nutri/dashboard", icon: "📊", label: "Dashboard" },
-  { to: "/nutri/profile", icon: "👩‍⚕️", label: "Meu Perfil" },
+  { to: "/app/nutritionist/dashboard", icon: "📊", label: "Dashboard" },
+  { to: "/app/nutritionist/profile", icon: "👩‍⚕️", label: "Meu Perfil" },
 ];
 
 export default function Sidebar() {
-  const { currentUser, logout } = useApp();
+  const { user, signOut } = useAuth();
 
   return (
     <aside className="hidden md:flex md:flex-col md:w-64 bg-white border-r border-gray-200 h-screen sticky top-0">
@@ -23,15 +23,15 @@ export default function Sidebar() {
       <div className="p-4 border-b border-gray-100">
         <div className="flex items-center gap-3">
           <img
-            src={currentUser?.avatar}
+            src={user?.user_metadata?.avatar_url || '/default-avatar.png'}
             alt=""
             className="w-10 h-10 rounded-full bg-gray-200"
           />
           <div className="min-w-0">
             <p className="text-sm font-medium text-gray-900 truncate">
-              {currentUser?.name}
+              {user?.user_metadata?.full_name || 'Nutricionista'}
             </p>
-            <p className="text-xs text-gray-500 truncate">{currentUser?.email}</p>
+            <p className="text-xs text-gray-500 truncate">{user?.email}</p>
           </div>
         </div>
       </div>
@@ -59,7 +59,7 @@ export default function Sidebar() {
       {/* Logout */}
       <div className="p-4 border-t border-gray-100">
         <button
-          onClick={logout}
+          onClick={signOut}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 w-full transition-colors"
         >
           <span>🚪</span>
