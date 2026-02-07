@@ -137,6 +137,38 @@ export default function DashboardPage() {
             >
               🏃 Perfil de Saúde
             </button>
+
+            <button
+              onClick={() => navigate('/app/patient/nutritionists')}
+              style={{
+                padding: '1rem',
+                backgroundColor: '#9c27b0',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: '500'
+              }}
+            >
+              👨‍⚕️ Solicitar Avaliação
+            </button>
+
+            <button
+              onClick={() => navigate('/app/patient/my-evaluations')}
+              style={{
+                padding: '1rem',
+                backgroundColor: '#00bcd4',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: '500'
+              }}
+            >
+              📋 Minhas Avaliações
+            </button>
           </div>
         )}
 

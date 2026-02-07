@@ -20,16 +20,14 @@ export default [
   route("app/patient/edit-meal/:id", "modules/patient/pages/EditMealPage.tsx"),
   route("app/patient/timeline", "modules/patient/pages/PatientTimelinePage.tsx"),
   route("app/patient/health-profile", "modules/patient/pages/PatientHealthProfilePage.tsx"),
+  route("app/patient/nutritionists", "modules/patient/pages/NutritionistsListPage.tsx"),
+  route("app/patient/request-evaluation/:nutritionistId", "modules/patient/pages/RequestEvaluationPage.tsx"),
+  route("app/patient/my-evaluations", "modules/patient/pages/MyEvaluationsPage.tsx"),
 
   // DEMO - Protótipo navegável com dados mockados
   layout("modules/patient/layouts/PatientLayout.tsx", [
     route("demo/patient/timeline", "modules/patient/pages/TimelinePage.tsx"),
-    route("demo/patient/evaluations", "modules/patient/pages/MyEvaluationsPage.tsx"),
     route("demo/patient/profile", "modules/patient/pages/HealthProfilePage.tsx"),
-    route(
-      "demo/patient/request-evaluation",
-      "modules/patient/pages/RequestEvaluationPage.tsx"
-    ),
   ]),
 
   layout("modules/nutritionist/layouts/NutritionistLayout.tsx", [
