@@ -171,14 +171,16 @@ export default function PatientTimelinePage() {
         maxWidth: '800px',
         margin: '0 auto',
         padding: 'clamp(1rem, 3vw, 1.5rem)',
-        paddingBottom: '6rem', // Espaço para bottom bar
+        paddingBottom: '8rem', // Espaço maior para bottom bar + FAB
         background: 'linear-gradient(to bottom, #f0fdf4 0%, #ffffff 300px)'
       }}>
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '2rem'
+          marginBottom: '2rem',
+          flexWrap: 'wrap',
+          gap: '1rem'
         }}>
           <div>
             <h1 style={{ 
@@ -261,7 +263,7 @@ export default function PatientTimelinePage() {
         onClick={() => setShowCaptureModal(true)}
         style={{
           position: 'fixed',
-          bottom: '80px',
+          bottom: '88px',
           right: '20px',
           width: '64px',
           height: '64px',
@@ -275,7 +277,7 @@ export default function PatientTimelinePage() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 100,
+          zIndex: 40,
           transition: 'all 0.3s ease',
           transform: 'scale(1)'
         }}

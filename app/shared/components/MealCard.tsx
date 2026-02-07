@@ -44,9 +44,11 @@ export function MealCard({ meal, onDelete, onEdit }: MealCardProps) {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'flex-start',
-        marginBottom: '0.75rem'
+        marginBottom: '0.75rem',
+        flexWrap: 'wrap',
+        gap: '0.75rem'
       }}>
-        <div>
+        <div style={{ flex: '1 1 auto', minWidth: '0' }}>
           <div style={{
             display: 'inline-block',
             padding: '0.35rem 0.85rem',
@@ -62,25 +64,30 @@ export function MealCard({ meal, onDelete, onEdit }: MealCardProps) {
           </div>
           <div style={{
             color: '#6b7280',
-            fontSize: '0.9rem',
+            fontSize: '0.85rem',
             fontWeight: '500'
           }}>
             {meal.time.slice(0, 5)} • {formattedDate}
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', flexShrink: 0 }}>
           {onEdit && (
             <button
               onClick={() => onEdit(meal.id)}
               style={{
-                padding: '0.5rem 0.75rem',
+                padding: '0.625rem',
                 backgroundColor: '#f9fafb',
                 border: '1px solid #e5e7eb',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 cursor: 'pointer',
-                fontSize: '0.85rem',
-                transition: 'all 0.2s ease'
+                fontSize: '1rem',
+                transition: 'all 0.2s ease',
+                minWidth: '2.5rem',
+                minHeight: '2.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = '#10b981';
@@ -102,14 +109,19 @@ export function MealCard({ meal, onDelete, onEdit }: MealCardProps) {
                 }
               }}
               style={{
-                padding: '0.5rem 0.75rem',
+                padding: '0.625rem',
                 backgroundColor: '#fef2f2',
                 border: '1px solid #fecaca',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 cursor: 'pointer',
-                fontSize: '0.85rem',
+                fontSize: '1rem',
                 color: '#dc2626',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                minWidth: '2.5rem',
+                minHeight: '2.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = '#dc2626';

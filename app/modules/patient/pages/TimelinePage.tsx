@@ -95,7 +95,7 @@ export default function TimelinePage() {
       )}
 
       {/* Timeline */}
-      <div className="px-4 py-4 space-y-6">
+      <div className="px-4 py-4 pb-28 space-y-6">
         {days.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-5xl mb-4">📷</div>
@@ -163,10 +163,10 @@ export default function TimelinePage() {
       {/* FAB - Floating Action Button */}
       <button
         onClick={handleCapture}
-        className="fixed bottom-20 right-4 w-14 h-14 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-lg flex items-center justify-center text-2xl transition-all active:scale-90 z-50"
+        className="fixed bottom-24 right-5 w-16 h-16 bg-green-600 hover:bg-green-700 text-white rounded-full shadow-xl flex items-center justify-center text-3xl transition-all active:scale-90 z-40"
         aria-label="Registrar refeição"
       >
-        📸
+        +
       </button>
 
       {/* ==================== Meal Detail / Edit Modal ==================== */}

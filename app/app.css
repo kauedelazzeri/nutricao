@@ -31,4 +31,24 @@ html {
 body {
   min-height: 100vh;
   min-height: -webkit-fill-available;
+  overflow-x: hidden;
+}
+
+/* Better touch targets for mobile */
+button, a {
+  touch-action: manipulation;
+}
+
+/* Prevent text selection on buttons */
+button {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
 }
