@@ -17,6 +17,7 @@ export default [
 
   // APP - Produção com Supabase
   route("app/patient/register-meal", "modules/patient/pages/RegisterMealPage.tsx"),
+  route("app/patient/edit-meal/:id", "modules/patient/pages/EditMealPage.tsx"),
   route("app/patient/timeline", "modules/patient/pages/PatientTimelinePage.tsx"),
 
   // DEMO - Protótipo navegável com dados mockados

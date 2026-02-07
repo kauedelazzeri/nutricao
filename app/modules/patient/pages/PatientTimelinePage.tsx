@@ -21,6 +21,10 @@ export default function PatientTimelinePage() {
     }
   };
 
+  const handleEdit = (id: string) => {
+    navigate(`/app/patient/edit-meal/${id}`);
+  };
+
   if (isLoading) {
     return (
       <div style={{
@@ -200,6 +204,7 @@ export default function PatientTimelinePage() {
               <MealCard
                 key={meal.id}
                 meal={meal}
+                onEdit={handleEdit}
                 onDelete={handleDelete}
               />
             ))}
