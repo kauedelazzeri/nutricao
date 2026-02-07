@@ -33,15 +33,16 @@ export default function Index() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '1.5rem 5%',
+          padding: 'clamp(0.75rem, 3vw, 1.5rem) clamp(1rem, 3vw, 5%)',
           maxWidth: '1200px',
-          margin: '0 auto'
+          margin: '0 auto',
+          gap: '0.5rem'
         }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            fontSize: '1.5rem',
+            fontSize: 'clamp(1.1rem, 4vw, 1.5rem)',
             fontWeight: '600',
             color: '#1f2937'
           }}>
@@ -54,17 +55,18 @@ export default function Index() {
               display: 'flex',
               alignItems: 'center',
               gap: '0.5rem',
-              padding: '0.75rem 1.75rem',
+              padding: 'clamp(0.5rem, 2vw, 0.75rem) clamp(0.75rem, 3vw, 1.75rem)',
               backgroundColor: '#10b981',
               color: 'white',
               border: 'none',
               borderRadius: '8px',
               fontWeight: '600',
-              fontSize: '1rem',
-              cursor: 'pointer'
+              fontSize: 'clamp(0.85rem, 2.5vw, 1rem)',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap'
             }}
           >
-            <svg width="20" height="20" viewBox="0 0 24 24">
+            <svg width="18" height="18" viewBox="0 0 24 24">
               <path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="white" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
               <path fill="white" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -76,12 +78,12 @@ export default function Index() {
       </header>
 
       {/* Spacer para compensar header fixo */}
-      <div style={{ height: '84px' }}></div>
+      <div style={{ height: 'clamp(60px, 15vw, 84px)' }}></div>
 
       {/* Hero Section */}
       <section style={{
         backgroundColor: '#f0fdf4',
-        padding: '3rem 5% 5rem'
+        padding: 'clamp(2rem, 5vw, 3rem) clamp(1rem, 3vw, 5%) clamp(3rem, 6vw, 5rem)'
       }}>
         <div style={{
           maxWidth: '1200px',
@@ -151,18 +153,18 @@ export default function Index() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                padding: '1rem 2rem',
+                padding: 'clamp(0.75rem, 2.5vw, 1rem) clamp(1.25rem, 4vw, 2rem)',
                 backgroundColor: '#10b981',
                 color: 'white',
                 border: 'none',
                 borderRadius: '10px',
                 fontWeight: '600',
-                fontSize: '1.1rem',
+                fontSize: 'clamp(0.95rem, 3vw, 1.1rem)',
                 boxShadow: '0 4px 14px rgba(16, 185, 129, 0.3)',
                 cursor: 'pointer'
               }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24">
+              <svg width="20" height="20" viewBox="0 0 24 24">
                 <path fill="white" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="white" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="white" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -176,14 +178,14 @@ export default function Index() {
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                padding: '1rem 2rem',
+                padding: 'clamp(0.75rem, 2.5vw, 1rem) clamp(1.25rem, 4vw, 2rem)',
                 backgroundColor: 'white',
                 color: '#1f2937',
                 textDecoration: 'none',
                 border: '2px solid #e5e7eb',
                 borderRadius: '10px',
                 fontWeight: '600',
-                fontSize: '1.1rem'
+                fontSize: 'clamp(0.95rem, 3vw, 1.1rem)'
               }}
             >
               Como Funciona
@@ -194,7 +196,7 @@ export default function Index() {
           <div style={{
             maxWidth: '400px',
             margin: '0 auto',
-            padding: '2rem',
+            padding: 'clamp(1.25rem, 4vw, 2rem)',
             backgroundColor: 'white',
             borderRadius: '24px',
             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
