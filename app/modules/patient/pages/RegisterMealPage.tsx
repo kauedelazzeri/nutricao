@@ -48,7 +48,15 @@ export default function RegisterMealPage() {
     }
 
     try {
-      await addMeal.mutateAsync({
+      console.log('📤 Enviando refeição:', {
+        date,
+        time,
+        meal_type: mealType,
+        description: description.trim(),
+        hasPhoto: !!photo
+      });
+
+      const result = await addMeal.mutateAsync({
         date,
         time,
         meal_type: mealType as any,
@@ -56,11 +64,21 @@ export default function RegisterMealPage() {
         photo: photo || undefined
       });
 
+      console.log('✅ Refeição criada:', result);
       alert('Refeição registrada com sucesso!');
       navigate('/app/patient/timeline');
-    } catch (error) {
-      console.error('Error creating meal:', error);
-      alert('Erro ao registrar refeição. Tente novamente.');
+    } catch (error: any) {
+      console.error('❌ Error creating meal:', error);
+      console.error('Error details:', {
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hint: error?.hint,
+        full: error
+      });
+      
+      const errorMessage = error?.message || 'Erro desconhecido';
+      alert(`Erro ao registrar refeição: ${errorMessage}\n\nVerifique o console para mais detalhes.`);
     }
   };
 
