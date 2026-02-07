@@ -41,21 +41,31 @@
 - useMeals hooks (CRUD com Cloudinary)
 - Delete de refeições funcionando (sem remover foto do Cloudinary)
 
+### Sprint 3: Edição + Perfil de Saúde ✅
+- EditMealPage com formulário completo
+- Edição de todos os campos da refeição
+- Troca de foto opcional (mantém, substitui ou remove)
+- PatientHealthProfilePage (idade, peso, altura, atividades, restrições, objetivos, alergias)
+- Cálculo automático de IMC
+- useHealthProfile hooks (GET/CREATE/UPDATE)
+
 ---
 
 ## 🎯 Próximas Sprints
 
-### Opção A: Sprint 3 - Funcionalidades (Recomendado)
-**Prioridade**: Completar MVP funcional
-- Editar refeição (com troca de foto)
-- Perfil de saúde do paciente (health_profiles)
-- Dashboard do nutricionista (listagem de avaliações)
-- Solicitação de avaliação (paciente → nutricionista)
+### Sprint 4: Avaliações (Planejada)
+**Funcionalidades paciente:**
+- Solicitar avaliação de nutricionista
+- Ver lista de nutricionistas disponíveis
+- Selecionar período para avaliação
+- Visualizar parecer do nutricionista
 
-**Benefícios**: 
-- Fluxo completo de ponta a ponta funcionando
-- Validação real do produto
-- Feedback de usuários mais valioso
+**Funcionalidades nutricionista:**
+- Dashboard com avaliações pendentes
+- Aceitar/Rejeitar solicitações
+- Ver refeições do paciente no período
+- Escrever parecer nutricional
+- Histórico de avaliações
 
 ### Opção B: Refatoração UI - Aplicar Protótipos
 **Prioridade**: Melhorar interface antes de novas features
