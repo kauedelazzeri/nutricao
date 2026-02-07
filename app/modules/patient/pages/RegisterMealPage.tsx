@@ -42,17 +42,12 @@ export default function RegisterMealPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!description.trim()) {
-      alert('Por favor, descreva a refeição');
-      return;
-    }
-
     try {
       await addMeal.mutateAsync({
         date,
         time,
         meal_type: mealType as any,
-        description: description.trim(),
+        description: description.trim() || '',
         photo: photo || undefined
       });
 
@@ -180,12 +175,11 @@ export default function RegisterMealPage() {
             marginBottom: '0.5rem',
             fontWeight: '500'
           }}>
-            Descrição *
+            Descrição (opcional)
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            required
             placeholder="Ex: Arroz, feijão, frango grelhado, salada..."
             rows={4}
             style={{

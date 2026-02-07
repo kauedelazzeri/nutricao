@@ -68,11 +68,6 @@ export default function EditMealPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!description.trim()) {
-      alert('Por favor, descreva a refeição');
-      return;
-    }
-
     if (!id) return;
 
     try {
@@ -82,7 +77,7 @@ export default function EditMealPage() {
           date,
           time,
           meal_type: mealType as any,
-          description: description.trim(),
+          description: description.trim() || '',
           photo: photo || undefined,
           // Se removeu a foto atual e não adicionou nova, limpar URLs
           photo_url: !currentPhotoUrl && !photo ? null : undefined,
@@ -235,12 +230,11 @@ export default function EditMealPage() {
             fontWeight: '500',
             color: '#555'
           }}>
-            Descrição
+            Descrição (opcional)
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            required
             rows={4}
             placeholder="Descreva sua refeição..."
             style={{
