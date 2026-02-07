@@ -17,6 +17,13 @@
 - **Arquivo**: `app/shared/contexts/AuthContext.tsx`
 - **Sprint**: A definir (melhorias de UX)
 
+### 3. **Links da demo quebrados**
+- **Problema**: Rotas `/demo/*` com links quebrados após reestruturação
+- **Impacto**: Médio - protótipo não navegável
+- **Solução**: Ajustar links internos nas páginas de demo
+- **Arquivos**: Páginas em `app/modules/patient/pages/*` e `app/modules/nutritionist/pages/*` (demo)
+- **Sprint**: A definir (manutenção)
+
 ---
 
 ## ✅ Sprints Completas

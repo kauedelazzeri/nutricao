@@ -87,22 +87,17 @@ export function useUpdateMeal() {
 
   return useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<MealInput> }) => {
-      let photoUrl = undefined;
-      let photoPublicId = undefined;
+      const updateData: any = { ...updates };
+      
+      // Remover o campo photo (File) que não vai pro banco
+      delete updateData.photo;
 
       // Upload nova foto se existir
       if (updates.photo) {
         const result = await uploadMealPhoto(updates.photo);
-        photoUrl = result.secure_url;
-        photoPublicId = result.public_id;
-      }
-
-      const updateData: any = { ...updates };
-      delete updateData.photo;
-      
-      if (photoUrl) {
-        updateData.photo_url = photoUrl;
-        updateData.photo_public_id = photoPublicId;
+        // Quando há nova foto, sempre substituir as URLs antigas
+        updateData.photo_url = result.secure_url;
+        updateData.photo_public_id = result.public_id;
       }
 
       const { data, error } = await supabase
