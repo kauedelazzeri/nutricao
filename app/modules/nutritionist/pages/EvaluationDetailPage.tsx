@@ -2,6 +2,15 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useEvaluationDetails, useAcceptEvaluation, useRejectEvaluation } from '~/shared/hooks/useEvaluationActions';
 
+const MEAL_TYPE_LABELS: Record<string, string> = {
+  breakfast: 'Café da manhã',
+  morning_snack: 'Lanche da manhã',
+  lunch: 'Almoço',
+  afternoon_snack: 'Lanche da tarde',
+  dinner: 'Jantar',
+  supper: 'Ceia'
+};
+
 export default function EvaluationDetailPage() {
   const { evaluationId } = useParams();
   const navigate = useNavigate();
@@ -18,8 +27,7 @@ export default function EvaluationDetailPage() {
     if (confirm('Deseja aceitar esta solicitação de avaliação?')) {
       try {
         await acceptEvaluation.mutateAsync(evaluationId);
-        alert('Avaliação aceita com sucesso!');
-        navigate('/app/nutritionist/dashboard');
+        navigate(`/app/nutritionist/feedback/${evaluationId}`);
       } catch (error) {
         alert('Erro ao aceitar avaliação. Tente novamente.');
       }
@@ -544,7 +552,7 @@ export default function EvaluationDetailPage() {
                         fontSize: '0.75rem',
                         fontWeight: '600'
                       }}>
-                        {meal.type}
+                        {MEAL_TYPE_LABELS[meal.meal_type] || meal.meal_type}
                       </span>
                       <span style={{
                         fontSize: '0.85rem',

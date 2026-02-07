@@ -26,6 +26,7 @@ export default [
 
   route("app/nutritionist/dashboard", "modules/nutritionist/pages/NutritionistDashboardPage.tsx"),
   route("app/nutritionist/evaluation/:evaluationId", "modules/nutritionist/pages/EvaluationDetailPage.tsx"),
+  route("app/nutritionist/feedback/:evaluationId", "modules/nutritionist/pages/EvaluationFeedbackPage.tsx"),
 
   // DEMO - Protótipo navegável com dados mockados
   layout("modules/patient/layouts/PatientLayout.tsx", [

@@ -351,7 +351,7 @@ export default function NutritionistDashboardPage() {
                     padding: '1.5rem',
                     cursor: 'pointer'
                   }}
-                  onClick={() => navigate(`/app/nutritionist/evaluation/${evaluation.id}`)}
+                  onClick={() => navigate(`/app/nutritionist/feedback/${evaluation.id}`)}
                 >
                   <div style={{
                     display: 'flex',
@@ -408,6 +408,15 @@ export default function NutritionistDashboardPage() {
                     color: '#666'
                   }}>
                     {periodStart} - {periodEnd}
+                  </p>
+
+                  <p style={{
+                    margin: '0.75rem 0 0 0',
+                    fontSize: '0.85rem',
+                    color: evaluation.feedback ? '#4caf50' : '#ff9800',
+                    fontWeight: '500'
+                  }}>
+                    {evaluation.feedback ? '✓ Parecer salvo' : '⚠️ Aguardando parecer'}
                   </p>
                 </div>
               );
