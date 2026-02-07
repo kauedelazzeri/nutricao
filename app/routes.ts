@@ -6,30 +6,53 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
-  // Public
+  // Public - Landing page (manter no root)
   index("modules/auth/LoginPage.tsx"),
 
-  // Patient routes (mobile-first)
+  // TEST - Página de teste (remover depois)
+  route("test/cloudinary", "modules/test/CloudinaryTestPage.tsx"),
+
+  // DEMO - Protótipo navegável com dados mockados
   layout("modules/patient/layouts/PatientLayout.tsx", [
-    route("app/timeline", "modules/patient/pages/TimelinePage.tsx"),
-    route("app/evaluations", "modules/patient/pages/MyEvaluationsPage.tsx"),
-    route("app/profile", "modules/patient/pages/HealthProfilePage.tsx"),
+    route("demo/patient/timeline", "modules/patient/pages/TimelinePage.tsx"),
+    route("demo/patient/evaluations", "modules/patient/pages/MyEvaluationsPage.tsx"),
+    route("demo/patient/profile", "modules/patient/pages/HealthProfilePage.tsx"),
     route(
-      "app/request-evaluation",
+      "demo/patient/request-evaluation",
       "modules/patient/pages/RequestEvaluationPage.tsx"
     ),
   ]),
 
-  // Nutritionist routes (desktop-first)
   layout("modules/nutritionist/layouts/NutritionistLayout.tsx", [
-    route("nutri/dashboard", "modules/nutritionist/pages/DashboardPage.tsx"),
+    route("demo/nutritionist/dashboard", "modules/nutritionist/pages/DashboardPage.tsx"),
     route(
-      "nutri/request/:id",
+      "demo/nutritionist/request/:id",
       "modules/nutritionist/pages/RequestDetailPage.tsx"
     ),
     route(
-      "nutri/profile",
+      "demo/nutritionist/profile",
       "modules/nutritionist/pages/ProfessionalProfilePage.tsx"
     ),
   ]),
+
+  // TODO: Rotas de produção (a serem criadas nos sprints)
+  // layout("modules/auth/layouts/AuthLayout.tsx", [
+  //   route("auth/login", "modules/auth/pages/LoginPage.tsx"),
+  //   route("auth/callback", "modules/auth/pages/CallbackPage.tsx"),
+  //   route("auth/setup", "modules/auth/pages/SetupPage.tsx"),
+  // ]),
+  //
+  // layout("modules/app/layouts/PatientAppLayout.tsx", [
+  //   route("app/patient/dashboard", "modules/app/patient/pages/DashboardPage.tsx"),
+  //   route("app/patient/register-meal", "modules/app/patient/pages/RegisterMealPage.tsx"),
+  //   route("app/patient/timeline", "modules/app/patient/pages/TimelinePage.tsx"),
+  //   route("app/patient/health-profile", "modules/app/patient/pages/HealthProfilePage.tsx"),
+  //   route("app/patient/request-evaluation", "modules/app/patient/pages/RequestEvaluationPage.tsx"),
+  //   route("app/patient/evaluation-feedback/:id", "modules/app/patient/pages/EvaluationFeedbackPage.tsx"),
+  // ]),
+  //
+  // layout("modules/app/layouts/NutritionistAppLayout.tsx", [
+  //   route("app/nutritionist/dashboard", "modules/app/nutritionist/pages/DashboardPage.tsx"),
+  //   route("app/nutritionist/evaluate/:id", "modules/app/nutritionist/pages/EvaluatePage.tsx"),
+  // ]),
 ] satisfies RouteConfig;

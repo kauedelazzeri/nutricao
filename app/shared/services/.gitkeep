@@ -1,0 +1,5 @@
+# Services directory
+# Aqui ficarão os arquivos:
+# - supabase.ts (cliente Supabase)
+# - cloudinary.ts (upload de imagens)
+# - api/ (CRUD operations)

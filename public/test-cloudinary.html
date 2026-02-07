@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste Cloudinary Upload</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .status {
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    .status.info { background: #e3f2fd; color: #1976d2; }
+    .status.success { background: #e8f5e9; color: #388e3c; }
+    .status.error { background: #ffebee; color: #d32f2f; }
+    .config {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    .config-item {
+      margin: 8px 0;
+    }
+    .config-label {
+      color: #666;
+      display: inline-block;
+      width: 150px;
+    }
+    button {
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    input[type="file"] {
+      margin: 15px 0;
+      padding: 10px;
+      border: 2px dashed #ddd;
+      border-radius: 4px;
+      width: 100%;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .result pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      margin: 0;
+      font-size: 13px;
+    }
+    .image-preview {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .image-preview img {
+      max-width: 100%;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🖼️ Teste de Upload Cloudinary</h1>
+    
+    <div id="status" class="status info">
+      ⚙️ Carregando configurações...
+    </div>
+
+    <div class="config" id="config"></div>
+
+    <div>
+      <label for="fileInput" style="display: block; margin-bottom: 8px; font-weight: 500;">
+        Selecione uma imagem para testar:
+      </label>
+      <input type="file" id="fileInput" accept="image/*">
+      <button id="uploadBtn" onclick="testUpload()" disabled>
+        📤 Fazer Upload de Teste
+      </button>
+    </div>
+
+    <div id="result"></div>
+    <div id="imagePreview"></div>
+  </div>
+
+  <script>
+    // Ler variáveis de ambiente do Vite
+    const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+    const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+
+    // Mostrar configuração
+    const configDiv = document.getElementById('config');
+    const statusDiv = document.getElementById('status');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const fileInput = document.getElementById('fileInput');
+
+    // Verificar configuração
+    function checkConfig() {
+      let html = '<div style="margin-bottom: 10px;"><strong>Configuração Detectada:</strong></div>';
+      
+      html += '<div class="config-item">';
+      html += '<span class="config-label">Cloud Name:</span>';
+      html += cloudName ? `<span style="color: green;">✅ ${cloudName}</span>` : '<span style="color: red;">❌ Não configurado</span>';
+      html += '</div>';
+
+      html += '<div class="config-item">';
+      html += '<span class="config-label">Upload Preset:</span>';
+      html += uploadPreset ? `<span style="color: green;">✅ ${uploadPreset}</span>` : '<span style="color: red;">❌ Não configurado</span>';
+      html += '</div>';
+
+      configDiv.innerHTML = html;
+
+      // Verificar se pode fazer upload
+      if (cloudName && uploadPreset) {
+        statusDiv.className = 'status success';
+        statusDiv.textContent = '✅ Configuração OK! Selecione uma imagem para testar.';
+        fileInput.disabled = false;
+      } else {
+        statusDiv.className = 'status error';
+        statusDiv.innerHTML = '❌ Configuração incompleta. Verifique seu arquivo .env.local:<br><br>' +
+          'Deve conter:<br>' +
+          'VITE_CLOUDINARY_CLOUD_NAME=seu-cloud-name<br>' +
+          'VITE_CLOUDINARY_UPLOAD_PRESET=nutricao_meals<br><br>' +
+          'Após corrigir, reinicie o servidor (npm run dev).';
+        fileInput.disabled = true;
+        uploadBtn.disabled = true;
+      }
+    }
+
+    // Habilitar botão quando arquivo for selecionado
+    fileInput.addEventListener('change', (e) => {
+      uploadBtn.disabled = !e.target.files.length;
+    });
+
+    // Função de upload
+    async function testUpload() {
+      const file = fileInput.files[0];
+      if (!file) {
+        alert('Selecione uma imagem primeiro!');
+        return;
+      }
+
+      const resultDiv = document.getElementById('result');
+      const imagePreviewDiv = document.getElementById('imagePreview');
+      
+      resultDiv.innerHTML = '<div class="status info">📤 Fazendo upload...</div>';
+      imagePreviewDiv.innerHTML = '';
+      uploadBtn.disabled = true;
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', uploadPreset);
+        formData.append('folder', 'nutricao-app/meals');
+
+        const uploadUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+        
+        console.log('Upload URL:', uploadUrl);
+        console.log('File:', file.name, file.type, file.size, 'bytes');
+
+        const startTime = Date.now();
+        const response = await fetch(uploadUrl, {
+          method: 'POST',
+          body: formData
+        });
+
+        const uploadTime = Date.now() - startTime;
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error?.message || `HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        
+        // Mostrar resultado
+        resultDiv.innerHTML = `
+          <div class="status success">✅ Upload realizado com sucesso em ${uploadTime}ms!</div>
+          <div style="margin-top: 15px;">
+            <strong>Detalhes da Imagem:</strong>
+            <pre>${JSON.stringify(data, null, 2)}</pre>
+          </div>
+        `;
+
+        // Mostrar preview
+        imagePreviewDiv.innerHTML = `
+          <div class="image-preview">
+            <h3>Preview da Imagem Uploadada:</h3>
+            <img src="${data.secure_url}" alt="Uploaded image">
+            <p style="margin-top: 10px; color: #666;">
+              <strong>URL:</strong> <a href="${data.secure_url}" target="_blank">${data.secure_url}</a>
+            </p>
+          </div>
+        `;
+
+        console.log('Upload success:', data);
+        
+      } catch (error) {
+        console.error('Upload error:', error);
+        resultDiv.innerHTML = `
+          <div class="status error">
+            ❌ Erro no upload: ${error.message}
+          </div>
+          <div style="margin-top: 15px;">
+            <strong>Possíveis causas:</strong>
+            <ul>
+              <li>Cloud Name incorreto</li>
+              <li>Upload Preset não existe ou está como "Signed"</li>
+              <li>Preset não tem permissão para unsigned uploads</li>
+              <li>Problema de CORS (improvável com Cloudinary)</li>
+            </ul>
+            <strong>Verifique:</strong>
+            <ol>
+              <li>Cloud Name: <code>${cloudName}</code></li>
+              <li>Upload Preset: <code>${uploadPreset}</code></li>
+              <li>Preset existe no Cloudinary Dashboard?</li>
+              <li>Signing Mode está como "Unsigned"?</li>
+            </ol>
+          </div>
+        `;
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    }
+
+    // Verificar configuração ao carregar
+    checkConfig();
+  </script>
+</body>
+</html>
