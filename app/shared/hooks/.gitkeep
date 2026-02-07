@@ -1,0 +1,6 @@
+# Hooks directory
+# Aqui ficarão os hooks customizados:
+# - useAuth.ts (autenticação)
+# - useMeals.ts (refeições - React Query ou Context)
+# - useEvaluations.ts (avaliações)
+# - useHealthProfile.ts (perfil de saúde)
