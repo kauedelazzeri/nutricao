@@ -111,27 +111,54 @@ export default function NutritionistsListPage() {
       <div style={{
         marginBottom: '2rem'
       }}>
-        <h1 style={{
-          margin: 0,
-          fontSize: 'clamp(1.5rem, 4vw, 2rem)',
-          fontWeight: '700',
-          color: '#1f2937',
-          background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          marginBottom: '0.25rem'
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem',
+          marginBottom: '0.5rem'
         }}>
-          Nutricionistas Disponíveis
-        </h1>
+          <h1 style={{
+            margin: 0,
+            fontSize: 'clamp(1.5rem, 4vw, 2rem)',
+            fontWeight: '700',
+            color: '#1f2937',
+            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text'
+          }}>
+            Nutricionistas Disponíveis
+          </h1>
+          <span style={{
+            padding: '0.4rem 0.9rem',
+            background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+            color: 'white',
+            borderRadius: '20px',
+            fontSize: '0.75rem',
+            fontWeight: '700',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            boxShadow: '0 4px 12px rgba(239, 68, 68, 0.3)',
+            animation: 'pulse 2s ease-in-out infinite'
+          }}>
+            🎉 Promoção
+          </span>
+        </div>
         <p style={{
           margin: 0,
           color: '#6b7280',
           fontSize: '0.95rem'
         }}>
-          Escolha um nutricionista para solicitar uma avaliação
+          <strong style={{ color: '#10b981' }}>Avaliações gratuitas por tempo limitado!</strong> Escolha um nutricionista
         </p>
       </div>
+
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.05); }
+        }
+      `}</style>
 
       <div style={{
         display: 'grid',
@@ -283,14 +310,30 @@ export default function NutritionistsListPage() {
                     {nutritionist.years_experience} anos de experiência
                   </p>
                 )}
-                <p style={{
-                  margin: '0.25rem 0 0 0',
-                  fontSize: '1.25rem',
-                  fontWeight: '700',
-                  color: '#10b981'
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  marginTop: '0.25rem'
                 }}>
-                  R$ {nutritionist.consultation_fee.toFixed(2)}
-                </p>
+                  <p style={{
+                    margin: 0,
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    color: '#9ca3af',
+                    textDecoration: 'line-through'
+                  }}>
+                    R$ {nutritionist.consultation_fee.toFixed(2)}
+                  </p>
+                  <p style={{
+                    margin: 0,
+                    fontSize: '1.5rem',
+                    fontWeight: '700',
+                    color: '#10b981'
+                  }}>
+                    GRÁTIS
+                  </p>
+                </div>
               </div>
 
               <button
