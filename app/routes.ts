@@ -25,6 +25,7 @@ export default [
   route("app/patient/my-evaluations", "modules/patient/pages/MyEvaluationsPage.tsx"),
 
   route("app/nutritionist/dashboard", "modules/nutritionist/pages/NutritionistDashboardPage.tsx"),
+  route("app/nutritionist/evaluation/:evaluationId", "modules/nutritionist/pages/EvaluationDetailPage.tsx"),
 
   // DEMO - Protótipo navegável com dados mockados
   layout("modules/patient/layouts/PatientLayout.tsx", [
