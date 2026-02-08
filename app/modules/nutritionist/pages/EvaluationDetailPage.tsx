@@ -24,19 +24,22 @@ export default function EvaluationDetailPage() {
   const handleAccept = async () => {
     if (!evaluationId) return;
 
-    if (confirm('Deseja aceitar esta solicitação de avaliação?')) {
-      try {
-        await acceptEvaluation.mutateAsync(evaluationId);
-        navigate(`/app/nutritionist/feedback/${evaluationId}`);
-      } catch (error) {
-        alert('Erro ao aceitar avaliação. Tente novamente.');
-      }
+    try {
+      acceptEvaluation.mutate(evaluationId, {
+        onSuccess: () => {
+          navigate(`/app/nutritionist/feedback/${evaluationId}`, { replace: true });
+        },
+        onError: (error) => {
+          console.error('Erro ao aceitar avaliação:', error);
+        }
+      });
+    } catch (error) {
+      console.error('Erro ao aceitar avaliação:', error);
     }
   };
 
   const handleReject = async () => {
     if (!evaluationId || !rejectionReason.trim()) {
-      alert('Por favor, informe o motivo da rejeição');
       return;
     }
 
@@ -45,10 +48,9 @@ export default function EvaluationDetailPage() {
         evaluationId,
         reason: rejectionReason
       });
-      alert('Avaliação rejeitada');
       navigate('/app/nutritionist/dashboard');
     } catch (error) {
-      alert('Erro ao rejeitar avaliação. Tente novamente.');
+      console.error('Erro ao rejeitar avaliação:', error);
     }
   };
 

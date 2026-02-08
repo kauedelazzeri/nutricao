@@ -423,6 +423,133 @@ export default function NutritionistDashboardPage() {
           </p>
         </div>
       )}
+
+      {/* Histórico Completo */}
+      {(allEvaluations && allEvaluations.length > 0) && (
+        <>
+          <h2 style={{
+            fontSize: '1.5rem',
+            marginTop: '3rem',
+            marginBottom: '1rem',
+            color: '#333'
+          }}>
+            📊 Histórico Completo
+          </h2>
+
+          <div style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '0.75rem'
+          }}>
+            {allEvaluations.map(evaluation => {
+              const status = STATUS_MAP[evaluation.status as keyof typeof STATUS_MAP];
+              const startDate = new Date(evaluation.period_start);
+              const endDate = new Date(evaluation.period_end);
+              const days = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+
+              return (
+                <div
+                  key={evaluation.id}
+                  onClick={() => {
+                    if (evaluation.status === 'pending') {
+                      navigate(`/app/nutritionist/evaluation/${evaluation.id}`);
+                    } else if (evaluation.status === 'accepted') {
+                      navigate(`/app/nutritionist/feedback/${evaluation.id}`);
+                    }
+                  }}
+                  style={{
+                    backgroundColor: 'white',
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '12px',
+                    padding: '1.25rem',
+                    cursor: evaluation.status !== 'completed' ? 'pointer' : 'default',
+                    transition: 'all 0.2s',
+                    opacity: evaluation.status === 'rejected' ? 0.6 : 1
+                  }}
+                  onMouseEnter={(e) => {
+                    if (evaluation.status !== 'completed' && evaluation.status !== 'rejected') {
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }}
+                >
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: '0.75rem'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <div style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '50%',
+                        backgroundColor: '#d1fae5',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '1.25rem'
+                      }}>
+                        {evaluation.patient_avatar ? (
+                          <img 
+                            src={evaluation.patient_avatar} 
+                            alt={evaluation.patient_name}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              borderRadius: '50%',
+                              objectFit: 'cover'
+                            }}
+                          />
+                        ) : '👤'}
+                      </div>
+                      <div>
+                        <p style={{ 
+                          fontWeight: '600', 
+                          margin: 0,
+                          fontSize: '0.95rem'
+                        }}>
+                          {evaluation.patient_name}
+                        </p>
+                        <p style={{ 
+                          fontSize: '0.8rem', 
+                          color: '#666',
+                          margin: '0.15rem 0 0 0'
+                        }}>
+                          {days} dias • {startDate.toLocaleDateString('pt-BR')} - {endDate.toLocaleDateString('pt-BR')}
+                        </p>
+                      </div>
+                    </div>
+                    <span style={{
+                      padding: '0.35rem 0.75rem',
+                      borderRadius: '20px',
+                      fontSize: '0.75rem',
+                      fontWeight: '600',
+                      backgroundColor: `${status?.color}22`,
+                      color: status?.color
+                    }}>
+                      {status?.label}
+                    </span>
+                  </div>
+
+                  <p style={{ 
+                    fontSize: '0.75rem', 
+                    color: '#999',
+                    margin: 0
+                  }}>
+                    Criado em {new Date(evaluation.created_at).toLocaleDateString('pt-BR')} às {new Date(evaluation.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                    {evaluation.completed_at && ` • Concluído em ${new Date(evaluation.completed_at).toLocaleDateString('pt-BR')}`}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 }

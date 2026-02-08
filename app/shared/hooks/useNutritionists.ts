@@ -2,6 +2,46 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../services/supabase';
 import type { Nutritionist } from '../types';
 
+// Hook para buscar avaliações do nutricionista
+export function useNutritionistEvaluations(nutritionistId: string | undefined) {
+  return useQuery({
+    queryKey: ['nutritionist-evaluations', nutritionistId],
+    queryFn: async () => {
+      if (!nutritionistId) throw new Error('Nutritionist ID required');
+
+      // Busca avaliações
+      const { data: evaluations, error } = await supabase
+        .from('evaluations')
+        .select('*')
+        .eq('nutritionist_id', nutritionistId)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      
+      if (!evaluations || evaluations.length === 0) {
+        return [];
+      }
+
+      // Busca dados dos pacientes separadamente
+      const patientIds = [...new Set(evaluations.map((e: any) => e.patient_id))];
+      const { data: patients } = await supabase
+        .from('users')
+        .select('id, full_name, avatar_url')
+        .in('id', patientIds);
+
+      // Mapeia pacientes por ID
+      const patientsMap = new Map(patients?.map((p: any) => [p.id, p]) || []);
+
+      // Combina dados
+      return evaluations.map((ev: any) => ({
+        ...ev,
+        patient: patientsMap.get(ev.patient_id)
+      }));
+    },
+    enabled: !!nutritionistId
+  });
+}
+
 export function useNutritionists() {
   return useQuery({
     queryKey: ['nutritionists'],

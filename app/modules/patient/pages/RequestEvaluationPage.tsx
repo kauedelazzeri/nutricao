@@ -39,10 +39,9 @@ export default function RequestEvaluationPage() {
         period_end: endDate
       });
 
-      alert('Solicitação de avaliação enviada com sucesso!');
       navigate('/app/patient/my-evaluations');
     } catch (error) {
-      alert('Erro ao enviar solicitação. Tente novamente.');
+      console.error('Erro ao enviar solicitação:', error);
     }
   };
 
@@ -176,14 +175,25 @@ export default function RequestEvaluationPage() {
           paddingTop: '1rem',
           borderTop: '1px solid #f0f0f0'
         }}>
-          <p style={{
-            margin: 0,
-            fontSize: '1.1rem',
-            fontWeight: '600',
-            color: '#4caf50'
-          }}>
-            R$ {nutritionist.consultation_fee.toFixed(2)}
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <p style={{
+              margin: 0,
+              fontSize: '0.95rem',
+              fontWeight: '500',
+              color: '#9ca3af',
+              textDecoration: 'line-through'
+            }}>
+              R$ {nutritionist.consultation_fee.toFixed(2)}
+            </p>
+            <p style={{
+              margin: 0,
+              fontSize: '1.3rem',
+              fontWeight: '700',
+              color: '#4caf50'
+            }}>
+              GRÁTIS
+            </p>
+          </div>
         </div>
       </div>
 

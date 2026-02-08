@@ -110,12 +110,21 @@ CREATE TABLE evaluation_health_snapshots (
 -- USERS TABLE
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 
--- SELECT: Usuários podem ver próprios dados OU dados de nutricionistas
+-- SELECT: Usuários podem ver próprios dados OU dados de nutricionistas OU nutricionistas veem pacientes
 CREATE POLICY "Users can view own data" ON users
   FOR SELECT USING (auth.uid() = id);
 
 CREATE POLICY "Anyone can view nutritionist user data" ON users
   FOR SELECT USING (user_type = 'nutritionist' OR auth.uid() = id);
+
+CREATE POLICY "Nutritionists can view their patients data" ON users
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM evaluations
+      WHERE evaluations.patient_id = users.id
+      AND evaluations.nutritionist_id = auth.uid()
+    )
+  );
 
 -- INSERT: Usuários podem inserir próprios dados no signup
 CREATE POLICY "Users can insert own data on signup" ON users

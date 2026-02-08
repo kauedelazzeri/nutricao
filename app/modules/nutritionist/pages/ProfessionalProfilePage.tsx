@@ -489,6 +489,14 @@ export default function ProfessionalProfilePage() {
               }}>
                 Valor da Consulta (R$)
               </label>
+              <p style={{
+                fontSize: '0.75rem',
+                color: '#6b7280',
+                marginBottom: '0.5rem',
+                fontStyle: 'italic'
+              }}>
+                💡 Inicialmente definido como R$ 0,00 para teste da aplicação
+              </p>
               {isEditing ? (
                 <input
                   type="number"
