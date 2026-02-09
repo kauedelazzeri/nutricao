@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { uploadToCloudinary } from '~/shared/services/cloudinary';
 import { inferMealTypeFromTime } from '~/shared/utils/mealTypeInference';
 import { supabase } from '~/shared/services/supabase';
@@ -13,24 +13,80 @@ interface QuickCaptureModalProps {
 export default function QuickCaptureModal({ isOpen, onClose, onSuccess }: QuickCaptureModalProps) {
   const { user } = useAuth();
   const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const isMountedRef = useRef(true);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      // Cancela upload em andamento se o componente desmontar
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
+
+  // Reset error when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setError(null);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
   const handleFileSelect = async (file: File) => {
     if (!user) return;
 
+    // Validação do arquivo
+    if (!file.type.startsWith('image/')) {
+      setError('Por favor, selecione uma imagem válida');
+      return;
+    }
+
+    // Limite de 10MB para evitar problemas em mobile
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      setError('Arquivo muito grande. Máximo: 10MB');
+      return;
+    }
+
+    console.log('[QuickCapture] Iniciando upload:', {
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type,
+      userAgent: navigator.userAgent,
+      timestamp: new Date().toISOString()
+    });
+
+    // Cria novo AbortController para este upload
+    abortControllerRef.current = new AbortController();
+
     try {
       setIsUploading(true);
+      setError(null);
 
-      // 1. Upload da imagem para Cloudinary
-      const photoUrl = await uploadToCloudinary(file);
+      console.log('[QuickCapture] Upload para Cloudinary iniciado');
+      // 1. Upload da imagem para Cloudinary com timeout e retry
+      const photoUrl = await uploadToCloudinary(file, abortControllerRef.current.signal);
+      console.log('[QuickCapture] Upload concluído:', photoUrl);
+
+      // Verifica se componente ainda está montado antes de continuar
+      if (!isMountedRef.current) {
+        console.log('[QuickCapture] Componente desmontado durante upload');
+        return;
+      }
 
       // 2. Pegar data/hora atual e inferir tipo de refeição
       const now = new Date();
       const mealType = inferMealTypeFromTime(now);
 
+      console.log('[QuickCapture] Salvando no Supabase...');
       // 3. Salvar no Supabase
       const { error } = await supabase
         .from('meals')
@@ -43,16 +99,40 @@ export default function QuickCaptureModal({ isOpen, onClose, onSuccess }: QuickC
           time: now.toTimeString().split(' ')[0].substring(0, 5) // Apenas o horário (HH:MM)
         } as any);
 
-      if (error) throw error;
+      if (error) {
+        console.error('[QuickCapture] Erro no Supabase:', error);
+        throw error;
+      }
+
+      console.log('[QuickCapture] Refeição salva com sucesso');
+
+      // Verifica novamente se ainda está montado
+      if (!isMountedRef.current) {
+        console.log('[QuickCapture] Componente desmontado após salvar');
+        return;
+      }
 
       // 4. Sucesso - fechar modal e atualizar lista
       onSuccess();
       onClose();
-    } catch (error) {
-      console.error('Erro ao salvar refeição:', error);
-      alert('Erro ao salvar refeição. Tente novamente.');
+    } catch (error: any) {
+      console.error('[QuickCapture] Erro ao salvar refeição:', {
+        error,
+        message: error?.message,
+        name: error?.name,
+        stack: error?.stack
+      });
+      
+      // Só mostra erro se componente ainda está montado
+      if (isMountedRef.current) {
+        const errorMessage = error?.message || 'Erro ao salvar refeição. Tente novamente.';
+        setError(errorMessage);
+      }
     } finally {
-      setIsUploading(false);
+      if (isMountedRef.current) {
+        setIsUploading(false);
+      }
+      abortControllerRef.current = null;
     }
   };
 
@@ -70,6 +150,15 @@ export default function QuickCaptureModal({ isOpen, onClose, onSuccess }: QuickC
       handleFileSelect(file);
     }
     e.target.value = ''; // Reset input
+  };
+
+  const handleCancelUpload = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    setIsUploading(false);
+    setError(null);
+    onClose();
   };
 
   return (
@@ -115,7 +204,81 @@ export default function QuickCaptureModal({ isOpen, onClose, onSuccess }: QuickC
               margin: '0 auto 1rem',
               animation: 'spin 1s linear infinite'
             }}></div>
-            <p style={{ color: '#6b7280' }}>Salvando refeição...</p>
+            <p style={{ color: '#6b7280', marginBottom: '1rem' }}>Salvando refeição...</p>
+            <p style={{ fontSize: '0.875rem', color: '#9ca3af', marginBottom: '1rem' }}>
+              Isso pode levar alguns segundos
+            </p>
+            <button
+              onClick={handleCancelUpload}
+              style={{
+                padding: '0.75rem 1.5rem',
+                backgroundColor: 'transparent',
+                border: '1px solid #ddd',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                fontWeight: '500',
+                color: '#6b7280'
+              }}
+            >
+              Cancelar
+            </button>
+          </div>
+        ) : error ? (
+          <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              backgroundColor: '#fee',
+              borderRadius: '50%',
+              margin: '0 auto 1rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.5rem'
+            }}>
+              ⚠️
+            </div>
+            <h4 style={{ color: '#dc2626', marginBottom: '0.5rem', fontWeight: '600' }}>
+              Erro ao enviar
+            </h4>
+            <p style={{ color: '#6b7280', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
+              {error}
+            </p>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                onClick={() => setError(null)}
+                style={{
+                  flex: 1,
+                  padding: '0.75rem',
+                  backgroundColor: '#10b981',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.875rem',
+                  fontWeight: '500'
+                }}
+              >
+                Tentar Novamente
+              </button>
+              <button
+                onClick={onClose}
+                style={{
+                  flex: 1,
+                  padding: '0.75rem',
+                  backgroundColor: 'transparent',
+                  border: '1px solid #ddd',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.875rem',
+                  fontWeight: '500',
+                  color: '#6b7280'
+                }}
+              >
+                Fechar
+              </button>
+            </div>
           </div>
         ) : (
           <>

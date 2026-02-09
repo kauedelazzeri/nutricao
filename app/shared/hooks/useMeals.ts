@@ -44,11 +44,21 @@ export function useAddMeal() {
       let photoUrl: string | undefined;
       let photoPublicId: string | undefined;
 
-      // Upload de foto se existir
+      // Upload de foto se existir (com timeout e retry automático)
       if (meal.photo) {
-        const result = await uploadMealPhoto(meal.photo);
-        photoUrl = result.secure_url;
-        photoPublicId = result.public_id;
+        try {
+          const result = await uploadMealPhoto(meal.photo, {
+            timeout: 60000, // 60s timeout
+            maxRetries: 3 // 3 tentativas
+          });
+          photoUrl = result.secure_url;
+          photoPublicId = result.public_id;
+        } catch (error: any) {
+          // Propagar erro mais específico
+          throw new Error(
+            error.message || 'Falha ao fazer upload da foto. Verifique sua conexão.'
+          );
+        }
       }
 
       const userId = (await supabase.auth.getUser()).data.user?.id;
@@ -92,12 +102,21 @@ export function useUpdateMeal() {
       // Remover o campo photo (File) que não vai pro banco
       delete updateData.photo;
 
-      // Upload nova foto se existir
+      // Upload nova foto se existir (com timeout e retry automático)
       if (updates.photo) {
-        const result = await uploadMealPhoto(updates.photo);
-        // Quando há nova foto, sempre substituir as URLs antigas
-        updateData.photo_url = result.secure_url;
-        updateData.photo_public_id = result.public_id;
+        try {
+          const result = await uploadMealPhoto(updates.photo, {
+            timeout: 60000,
+            maxRetries: 3
+          });
+          // Quando há nova foto, sempre substituir as URLs antigas
+          updateData.photo_url = result.secure_url;
+          updateData.photo_public_id = result.public_id;
+        } catch (error: any) {
+          throw new Error(
+            error.message || 'Falha ao fazer upload da foto. Verifique sua conexão.'
+          );
+        }
       }
 
       const { data, error } = await supabase
