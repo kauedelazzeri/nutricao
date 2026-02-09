@@ -38,6 +38,21 @@ export default function PatientTimelinePage() {
     navigate(`/app/patient/edit-meal/${id}`);
   };
 
+  // Filtrar refeições por período
+  const filteredMeals = useMemo(() => {
+    if (!meals || meals.length === 0) return [];
+    if (filter === 'all') return meals;
+    
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - filter);
+    cutoff.setHours(0, 0, 0, 0);
+    
+    return meals.filter((meal) => {
+      const mealDate = new Date(meal.date + 'T00:00:00');
+      return mealDate >= cutoff;
+    });
+  }, [meals, filter]);
+
   if (isLoading) {
     return (
       <div style={{
@@ -160,21 +175,6 @@ export default function PatientTimelinePage() {
       </>
     );
   }
-
-  // Filtrar refeições por período
-  const filteredMeals = useMemo(() => {
-    if (!meals) return [];
-    if (filter === 'all') return meals;
-    
-    const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - filter);
-    cutoff.setHours(0, 0, 0, 0);
-    
-    return meals.filter((meal) => {
-      const mealDate = new Date(meal.date + 'T00:00:00');
-      return mealDate >= cutoff;
-    });
-  }, [meals, filter]);
 
   // Agrupar refeições por data
   const groupedMeals = filteredMeals.reduce((acc, meal) => {
