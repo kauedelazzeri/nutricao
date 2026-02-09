@@ -153,6 +153,8 @@ export function MealCard({ meal, onDelete, onEdit }: MealCardProps) {
             style={{
               width: '100%',
               height: 'auto',
+              maxHeight: '200px',
+              objectFit: 'cover',
               display: 'block'
             }}
           />

@@ -31,6 +31,13 @@
 - **Impacto**: Médio - overhead de requisições, pode atingir rate limits
 - **Sprint**: Em andamento 🔄
 
+### 5. **Filtro de timeline busca todas as refeições (sem filtro no backend)**
+- **Problema**: Filtro de período (7/14/30 dias) filtra apenas no frontend - busca todas refeições do banco
+- **Impacto**: Baixo agora, mas pode ficar lento com muitos dados
+- **Solução**: Modificar `useMeals()` para aceitar parâmetros de data e adicionar `.gte()` / `.lte()` no Supabase
+- **Arquivo**: `app/shared/hooks/useMeals.ts`
+- **Sprint**: A definir (otimização futura)
+
 ---
 
 ## ✅ Sprints Completas

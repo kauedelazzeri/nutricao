@@ -1,9 +1,18 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { useMeals, useDeleteMeal } from '~/shared/hooks/useMeals';
 import { MealCard } from '~/shared/components/MealCard';
 import QuickCaptureModal from '~/shared/components/QuickCaptureModal';
 import type { Meal } from '~/shared/types';
+
+type FilterPeriod = 7 | 14 | 30 | 'all';
+
+const FILTER_OPTIONS: { value: FilterPeriod; label: string }[] = [
+  { value: 7, label: '7 dias' },
+  { value: 14, label: '14 dias' },
+  { value: 30, label: '30 dias' },
+  { value: 'all', label: 'Tudo' },
+];
 
 interface GroupedMeals {
   [date: string]: Meal[];
@@ -14,6 +23,7 @@ export default function PatientTimelinePage() {
   const { data: meals, isLoading, error, refetch } = useMeals();
   const deleteMeal = useDeleteMeal();
   const [showCaptureModal, setShowCaptureModal] = useState(false);
+  const [filter, setFilter] = useState<FilterPeriod>(7);
 
   const handleDelete = async (id: string) => {
     try {
@@ -151,8 +161,23 @@ export default function PatientTimelinePage() {
     );
   }
 
+  // Filtrar refeições por período
+  const filteredMeals = useMemo(() => {
+    if (!meals) return [];
+    if (filter === 'all') return meals;
+    
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - filter);
+    cutoff.setHours(0, 0, 0, 0);
+    
+    return meals.filter((meal) => {
+      const mealDate = new Date(meal.date + 'T00:00:00');
+      return mealDate >= cutoff;
+    });
+  }, [meals, filter]);
+
   // Agrupar refeições por data
-  const groupedMeals = meals.reduce((acc, meal) => {
+  const groupedMeals = filteredMeals.reduce((acc, meal) => {
     const date = meal.date;
     if (!acc[date]) {
       acc[date] = [];
@@ -178,7 +203,7 @@ export default function PatientTimelinePage() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '2rem',
+          marginBottom: '1rem',
           flexWrap: 'wrap',
           gap: '1rem'
         }}>
@@ -219,6 +244,74 @@ export default function PatientTimelinePage() {
               letterSpacing: '0.05em',
               marginTop: '0.25rem'
             }}>Refeições</div>
+          </div>
+        </div>
+
+        {/* Filtro de período */}
+        <div style={{
+          marginBottom: '2rem',
+          backgroundColor: 'white',
+          padding: '1rem',
+          borderRadius: '12px',
+          border: '1px solid #e5e7eb',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '0.75rem'
+          }}>
+            <span style={{
+              fontSize: '0.8rem',
+              fontWeight: '600',
+              color: '#6b7280',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em'
+            }}>Período</span>
+            <span style={{
+              fontSize: '0.8rem',
+              color: '#9ca3af'
+            }}>
+              {filteredMeals.length} {filteredMeals.length === 1 ? 'refeição' : 'refeições'}
+            </span>
+          </div>
+          <div style={{
+            display: 'flex',
+            gap: '0.5rem',
+            flexWrap: 'wrap'
+          }}>
+            {FILTER_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setFilter(opt.value)}
+                style={{
+                  padding: '0.65rem 1.25rem',
+                  borderRadius: '10px',
+                  border: filter === opt.value ? 'none' : '1px solid #e5e7eb',
+                  backgroundColor: filter === opt.value ? '#10b981' : 'white',
+                  color: filter === opt.value ? 'white' : '#6b7280',
+                  fontSize: '0.85rem',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: filter === opt.value ? '0 4px 12px rgba(16, 185, 129, 0.3)' : 'none',
+                  whiteSpace: 'nowrap'
+                }}
+                onMouseEnter={(e) => {
+                  if (filter !== opt.value) {
+                    e.currentTarget.style.backgroundColor = '#f9fafb';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (filter !== opt.value) {
+                    e.currentTarget.style.backgroundColor = 'white';
+                  }
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
         </div>
 

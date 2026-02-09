@@ -51,8 +51,8 @@ export default function TimelinePage() {
   return (
     <div className="max-w-md mx-auto">
       {/* Header */}
-      <header className="sticky top-0 bg-white/80 backdrop-blur-lg border-b border-gray-100 z-40 px-4 py-3">
-        <div className="flex items-center justify-between">
+      <header className="sticky top-0 bg-white/95 backdrop-blur-lg border-b border-gray-100 z-40 px-4 py-3 shadow-sm">
+        <div className="flex items-center justify-between mb-3">
           <div>
             <h1 className="text-lg font-bold text-gray-900">🥗 NutriSnap</h1>
             <p className="text-xs text-gray-500">
@@ -66,24 +66,29 @@ export default function TimelinePage() {
           />
         </div>
 
-        {/* Date filter pills */}
-        <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
-          {FILTER_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => setFilter(opt.value)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-                filter === opt.value
-                  ? "bg-green-600 text-white shadow-sm"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-          <span className="text-[10px] text-gray-400 self-center ml-1 whitespace-nowrap">
-            {filteredMeals.length} refeições
-          </span>
+        {/* Date filter section */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-gray-600">Período</span>
+            <span className="text-xs text-gray-400">
+              {filteredMeals.length} {filteredMeals.length === 1 ? 'refeição' : 'refeições'}
+            </span>
+          </div>
+          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+            {FILTER_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setFilter(opt.value)}
+                className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+                  filter === opt.value
+                    ? "bg-green-600 text-white shadow-md"
+                    : "bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
@@ -123,7 +128,7 @@ export default function TimelinePage() {
                     <img
                       src={meal.photoUrl}
                       alt="Refeição"
-                      className="w-full h-48 object-cover"
+                      className="w-full h-32 object-cover"
                       loading="lazy"
                     />
                     <div className="px-4 py-3 flex items-center justify-between">
